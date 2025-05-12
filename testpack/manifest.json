@@ -1,0 +1,8 @@
+{
+    "resourcepack": {
+        "name": "Sample Pack",
+        "id": "samplepack",
+        "author": "CR Jakob",
+        "targets": ["0.5.0"]
+    }
+}
