@@ -2,7 +2,7 @@
     "polymod": {
         "name": "Resourcepack Mod",
         "id": "resourcepack",
-        "author": "Lockheed SR-71 Blackbird, CR Jakob",
+        "author": "CR Jakob, Lockheed SR-71 Blackbird",
         "targets": [
             "0.5.0"
         ],

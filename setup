@@ -1,0 +1,13 @@
+#!/bin/bash
+
+for dir in */; do
+    if [[ $dir == "PolyModLoader/" ]]; then continue; fi
+    tsc $dir/main.mod.ts --target ES2020 --module ES2020
+done
+
+if [[ "$1" == "host" ]]; then
+    trap "trap - TERM && kill -- -$$" INT TERM EXIT
+    (cd PolyModLoader; python ../httpserver.py 8000 &> /dev/null) &
+    python httpserver.py 8001 &> /dev/null &
+    wait
+fi
