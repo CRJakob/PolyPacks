@@ -1,0 +1,31 @@
+name: TypeScript Build
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install TypeScript
+        run: npm install -g typescript
+
+      - name: Compile TypeScript (excluding PolyModLoader)
+        shell: bash
+        run: |
+          for dir in */; do
+              if [[ $dir == "PolyModLoader/" ]]; then continue; fi
+              tsc "$dir/main.mod.ts" --target ES2020 --module ES2020
+          done
