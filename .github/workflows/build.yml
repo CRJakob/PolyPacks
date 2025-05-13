@@ -1,9 +1,10 @@
-name: Build and Optional Host
+name: TypeScript Build
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch: # Allows manual trigger
+    branches: [ dev ]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,13 +19,13 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install TypeScript compiler
+      - name: Install TypeScript
         run: npm install -g typescript
 
-      - name: Run TypeScript build script
+      - name: Compile TypeScript (excluding PolyModLoader)
         shell: bash
         run: |
           for dir in */; do
               if [[ $dir == "PolyModLoader/" ]]; then continue; fi
-              tsc $dir/main.mod.ts --target ES2020 --module ES2020
+              tsc "$dir/main.mod.ts" --target ES2020 --module ES2020
           done
