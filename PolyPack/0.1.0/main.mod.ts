@@ -122,6 +122,12 @@ class PolyPackBase extends PolyMod {
         }
     }
 
+    setPackLoaded(pack, state) {
+        if (!pack) return;
+        pack.loaded = state;
+        this.savePacksToLocalStorage();
+    }
+
     // reorder mod function
     reorderPack(pack: PolyPack, delta: number) {
         if (!pack) return;
