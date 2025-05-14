@@ -1,4 +1,4 @@
-name: Compile & Debug TypeScript on dev
+name: Compile and Debug TypeScript on dev
 
 on:
   push:
@@ -13,25 +13,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug: show workspace info
+      - name: Debug workspace
         run: |
           echo "Working directory: $GITHUB_WORKSPACE"
           echo "----- Full tree -----"
           ls -R .
 
-      - name: Clean old JS (if it exists)
+      - name: Clean old JS
         run: |
           echo "Before rm:"
           ls -l PolyPack/0.1.0/main.mod.js || echo "[not found]"
-          rm -vf PolyPack/0.1.0/main.mod.js || true
+          rm -v PolyPack/0.1.0/main.mod.js || true
           echo "After rm:"
           ls -l PolyPack/0.1.0/main.mod.js || echo "[not found]"
 
-      - name: Setup Node.js & install TS
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install typescript --no-save
+
+      - name: Install TypeScript
+        run: npm install typescript --no-save
 
       - name: Compile main.mod.ts → main.mod.js
         run: |
@@ -42,7 +44,7 @@ jobs:
             --outDir . \
             PolyPack/0.1.0/main.mod.ts
 
-      - name: Debug: post-compile
+      - name: Debug post-compile
         run: |
           echo "----- After compile -----"
           ls -l PolyPack/0.1.0
