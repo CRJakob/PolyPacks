@@ -23,5 +23,8 @@ jobs:
       - name: Install TypeScript
         run: npm install -g typescript
 
+      - name: Delete outdated main.mod.js
+        run: rm -f ./main.mod.js
+
       - name: Compile TypeScript (using tsconfig.json)
         run: tsc --project tsconfig.json --force --pretty false --listFiles --diagnostics
