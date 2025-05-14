@@ -1,7 +1,6 @@
 #!/bin/bash
 
-for dir in */; do
-    if [[ $dir == "PolyModLoader/" ]]; then continue; fi
+for dir in PolyPack/*; do
     tsc $dir/main.mod.ts --target ES2020 --module ES2020
 done
 
