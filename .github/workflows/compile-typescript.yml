@@ -1,3 +1,4 @@
+# .github/workflows/compile-typescript.yml
 name: Compile Ts
 
 on:
@@ -8,51 +9,24 @@ on:
 jobs:
   compile:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      # 1) checkout your code
+      - name: Checkout
         uses: actions/checkout@v3
 
+      # 2) set up Node
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install TypeScript
-        run: npm install typescript --no-save
-        working-directory: reposrc
-
-      - name: Ensure tsconfig.json/jsconfig.json exist
+      # 3) install TypeScript locally and compile the single file
+      - name: Compile main.mod.ts → main.mod.js
         run: |
-          if [ ! -f reposrc/tsconfig.json ]; then
-            cat > reposrc/tsconfig.json << 'EOF'
-{
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": ".",
-    "target": "ES2017",
-    "module": "commonjs",
-    "strict": true
-  },
-  "include": ["PolyPack/0.1.0/main.mod.ts"]
-}
-EOF
-          fi
-          if [ ! -f reposrc/jsconfig.json ]; then
-            cat > reposrc/jsconfig.json << 'EOF'
-{
-  "compilerOptions": {
-    "checkJs": true
-  },
-  "include": ["**/*.js"]
-}
-EOF
-          fi
-
-      - name: Compile main.mod.ts
-        run: |
+          cd reposrc
+          npm install typescript --no-save
           npx tsc \
-            --project reposrc/tsconfig.json \
-            --rootDir reposrc \
-            --outDir reposrc \
-            reposrc/PolyPack/0.1.0/main.mod.ts
+            --target ES2017 \
+            --module commonjs \
+            --outFile PolyPack/0.1.0/main.mod.js \
+            PolyPack/0.1.0/main.mod.ts
