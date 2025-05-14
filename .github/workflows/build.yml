@@ -1,9 +1,10 @@
-name: TypeScript Build
+name: Compile TypeScript Mods
 
 on:
   push:
     branches: [ dev ]
   pull_request:
+    branches: [ dev ]
   workflow_dispatch:
 
 jobs:
@@ -22,10 +23,11 @@ jobs:
       - name: Install TypeScript
         run: npm install -g typescript
 
-      - name: Compile TypeScript (excluding PolyModLoader)
+      - name: Compile main.mod.ts files in place
         shell: bash
         run: |
-          for dir in */; do
-              if [[ $dir == "PolyModLoader/" ]]; then continue; fi
-              tsc "$dir/0.1.0/main.mod.ts" --target ES2020 --module ES2020
+          for file in PolyPack/*/main.mod.ts; do
+            dir=$(dirname "$file")
+            echo "Compiling $file..."
+            tsc "$file" --project tsconfig.json --outDir "$dir"
           done
