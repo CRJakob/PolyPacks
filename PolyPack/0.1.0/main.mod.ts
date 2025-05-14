@@ -53,6 +53,10 @@ class PolyPackBase extends PolyMod {
         }
     }
 
+    #getAllPacks() {
+        return this.#packs;
+    }
+
     async #addPack(polyPackURL: string)
     {
         try {
@@ -365,7 +369,7 @@ class PolyPackBase extends PolyMod {
         let availableModsContainer = document.createElement("div")
         availableModsContainer.className = "container";
         availablePacksList.appendChild(availableModsContainer);
-        for(let polyMod of this.getAllMods()) {
+        for(let polyMod of this.#getAllPacks()) {
             let modDiv = document.createElement('div');
             modDiv.style = `--text-color: #fff;
         --text-disabled-color: #5d6a7c;
@@ -422,7 +426,7 @@ class PolyPackBase extends PolyMod {
         white-space: nowrap;`;
             modMainButton.innerHTML = `<img src="${polyMod.iconSrc}" style="max-width:100px;max-height=100px;">`;
             modMainButton.addEventListener("click", () => {
-                if(!polyMod.isLoaded) {
+                if(!pack.loaded) {
                     goUpButton.disabled = true;
                     goDownButton.disabled = true;
                     unloadButton.disabled = true;
@@ -589,7 +593,7 @@ class PolyPackBase extends PolyMod {
         margin: 0;
         padding: 12px;
         font-size: 28px;
-        color: var(--text-color);">  ${polyMod.name} <u>${polyMod.version}</u></p><p style="    --text-color: #fff;
+        color: var(--text-color);">  ${packActivatedLabel.name} </u></p><p style="    --text-color: #fff;
         --text-disabled-color: #5d6a7c;
         --surface-color: #28346a;
         --surface-secondary-color: #212b58;
@@ -611,7 +615,7 @@ class PolyPackBase extends PolyMod {
         margin: 0;
         padding: 12px;
         font-size: 28px;
-        color: var(--text-color);">  By ${polyMod.author}</p>`
+        color: var(--text-color);">  By ${pack.packAuthor}</p>`
             
             let rightDiv = document.createElement("div");
             rightDiv.style = `    --text-color: #fff;
@@ -677,7 +681,7 @@ class PolyPackBase extends PolyMod {
                 this.#openDescription(n, polyMod);
             })
             modDiv.appendChild(infoButton);
-            if(polyMod.isLoaded) {
+            if(polyMod.loaded) {
                 activatedPacksContainer.appendChild(modDiv)
             } else {
                 availableModsContainer.appendChild(modDiv);
