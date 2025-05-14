@@ -1,3 +1,4 @@
+"use strict";
 var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
@@ -9,9 +10,12 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _PolyPackBase_instances, _PolyPackBase_pml, _PolyPackBase_localStorage, _PolyPackBase_polyVersion, _PolyPackBase_packs, _PolyPackBase_packUrls, _PolyPackBase_packOverrides, _PolyPackBase_getPack, _PolyPackBase_getAllPacks, _PolyPackBase_addPack, _PolyPackBase_savePacksToLocalStorage, _PolyPackBase_importPacks, _PolyPackBase_setPackLoaded, _PolyPackBase_reorderPack, _PolyPackBase_openDescription, _PolyPackBase_promptUserForNewPack, _PolyPackBase_createPackScreen;
-import { PolyMod } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
-class PolyPackBase extends PolyMod {
+var _PolyPackBase_instances, _PolyPackBase_pml, _PolyPackBase_localStorage, _PolyPackBase_polyVersion, _PolyPackBase_packs, _PolyPackBase_packUrls, _PolyPackBase_packOverrides, _PolyPackBase_getPack, _PolyPackBase_getAllPacks, _PolyPackBase_addPack, _PolyPackBase_removePack, _PolyPackBase_savePacksToLocalStorage, _PolyPackBase_importPacks, _PolyPackBase_setPackLoaded, _PolyPackBase_reorderPack, _PolyPackBase_openDescription, _PolyPackBase_promptUserForNewPack, _PolyPackBase_createPackScreen;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.polyMod = void 0;
+// @ts-ignore
+const PolyModLoader_js_1 = require("https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js");
+class PolyPackBase extends PolyModLoader_js_1.PolyMod {
     constructor() {
         super(...arguments);
         _PolyPackBase_instances.add(this);
@@ -35,8 +39,9 @@ class PolyPackBase extends PolyMod {
         };
         // UI STUFF
         _PolyPackBase_openDescription.set(this, function (n, pack) {
-            let menuDiv = document.getElementById("ui").children[0];
-            let trackInfoDiv = document.createElement('div');
+            var _a;
+            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const trackInfoDiv = document.createElement('div');
             trackInfoDiv.style = `    interpolate-size: allow-keywords;
         --text-color: #fff;
         --text-disabled-color: #5d6a7c;
@@ -65,7 +70,7 @@ class PolyPackBase extends PolyMod {
         padding: 0;
         width: 1000px;
         height: 100%;`;
-            let containerDiv = document.createElement("div");
+            const containerDiv = document.createElement("div");
             containerDiv.style = `    interpolate-size: allow-keywords;
         --text-color: #fff;
         --text-disabled-color: #5d6a7c;
@@ -91,7 +96,7 @@ class PolyPackBase extends PolyMod {
         overflow-x: hidden;
         overflow-y: scroll;
         pointer-events: auto;`;
-            let goBackButton = document.createElement("button");
+            const goBackButton = document.createElement("button");
             goBackButton.style = "float: left;";
             goBackButton.className = "button left";
             goBackButton.innerHTML = `<img class="button-icon" src="images/back.svg"> Back`;
@@ -101,7 +106,7 @@ class PolyPackBase extends PolyMod {
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
             });
             containerDiv.appendChild(goBackButton);
-            let infoDiv = document.createElement('div');
+            const infoDiv = document.createElement('div');
             infoDiv.innerHTML = `<h2> Loading... </h2>`;
             fetch(`${pack.baseUrl}/description.html`).then(res => {
                 if (res.status !== 200) {
@@ -124,17 +129,18 @@ class PolyPackBase extends PolyMod {
         );
         // pml add pack screen
         _PolyPackBase_promptUserForNewPack.set(this, (n) => {
-            let menuDiv = document.getElementById("ui").children[0];
-            let promptDiv = document.createElement("div");
+            var _a;
+            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const promptDiv = document.createElement("div");
             promptDiv.className = "nickname";
-            let packUrlHead = document.createElement("h1");
+            const packUrlHead = document.createElement("h1");
             packUrlHead.innerText = "Pack URL";
             packUrlHead.style = "float: left;";
             promptDiv.appendChild(packUrlHead);
-            let urlInput = document.createElement("input");
+            const urlInput = document.createElement("input");
             urlInput.type = "text";
             promptDiv.appendChild(urlInput);
-            let importButton = document.createElement("button");
+            const importButton = document.createElement("button");
             importButton.style = "float: right;";
             importButton.className = "button right";
             importButton.innerHTML = `<img class="button-icon" src="images/import.svg"> Import`;
@@ -147,7 +153,7 @@ class PolyPackBase extends PolyMod {
                 });
             });
             promptDiv.appendChild(importButton);
-            let goBackButton = document.createElement("button");
+            const goBackButton = document.createElement("button");
             goBackButton.style = "float: left;";
             goBackButton.className = "button left";
             goBackButton.innerHTML = `<img class="button-icon" src="images/back.svg"> Back`;
@@ -163,136 +169,139 @@ class PolyPackBase extends PolyMod {
         );
         // pml pack screen ui
         _PolyPackBase_createPackScreen.set(this, (n) => {
+            var _a;
             let menuDiv;
-            for (let elem of document.getElementById("ui").children) {
+            for (const elem of (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children) {
                 if (elem.classList.contains("menu")) {
                     menuDiv = elem;
                 }
             }
-            let hideList = [0, 1, 3, 4, 5, 6];
-            for (let intToHide of hideList) {
+            const hideList = [0, 1, 3, 4, 5, 6];
+            for (const intToHide of hideList) {
+                // @ts-ignore
                 menuDiv.children[intToHide].classList.add("hidden");
             }
             let selectedPack;
-            let packsDiv = document.createElement('div');
+            const packsDiv = document.createElement('div');
             packsDiv.className = "track-info";
-            let availablePacksList = document.createElement("div");
+            const availablePacksList = document.createElement("div");
             availablePacksList.className = "leaderboard";
-            let availablePacksLabel = document.createElement("h2");
+            const availablePacksLabel = document.createElement("h2");
             availablePacksLabel.textContent = "Available";
             availablePacksList.appendChild(availablePacksLabel);
-            let activatedPacksList = document.createElement("div");
+            const activatedPacksList = document.createElement("div");
             activatedPacksList.className = "leaderboard";
-            let packActivatedLabel = document.createElement("h2");
+            const packActivatedLabel = document.createElement("h2");
             packActivatedLabel.textContent = "Loaded";
             activatedPacksList.appendChild(packActivatedLabel);
-            let activatedPacksContainer = document.createElement("div");
+            const activatedPacksContainer = document.createElement("div");
             activatedPacksContainer.className = "container";
             activatedPacksList.appendChild(activatedPacksContainer);
-            let buttonWrapper = document.createElement("div");
+            const buttonWrapper = document.createElement("div");
             buttonWrapper.className = "button-wapper";
             activatedPacksList.appendChild(buttonWrapper);
-            let unloadButton = document.createElement('button');
+            const unloadButton = document.createElement('button');
             unloadButton.className = "button first";
             unloadButton.disabled = true;
             unloadButton.style = "margin: 10px 0; float: left;padding: 10px; margin-left:2px;";
             unloadButton.innerHTML = `<img class="button-icon" src="images/arrow_left.svg"> Unload`;
             unloadButton.addEventListener("click", () => {
-                let pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
+                const pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_setPackLoaded).call(this, pack, false);
                 packsDiv.remove();
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
             });
             buttonWrapper.appendChild(unloadButton);
-            let goUpButton = document.createElement('button');
+            const goUpButton = document.createElement('button');
             goUpButton.className = "button first";
             goUpButton.disabled = true;
             goUpButton.style = "margin: 10px; float: left;padding: 10px";
             goUpButton.innerHTML = `<img class="button-icon" src="images/arrow_up.svg" style="margin: 0px 10px">`;
             goUpButton.addEventListener("click", () => {
-                let pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
+                const pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_reorderPack).call(this, pack, -1);
                 packsDiv.remove();
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
             });
             buttonWrapper.appendChild(goUpButton);
-            let goDownButton = document.createElement('button');
+            const goDownButton = document.createElement('button');
             goDownButton.className = "button first";
             goDownButton.disabled = true;
             goDownButton.style = "margin: 10px 0; float: left;padding: 10px";
             goDownButton.innerHTML = `<img class="button-icon" src="images/arrow_down.svg" style="margin: 0px 10px">`;
             goDownButton.addEventListener("click", () => {
-                // same thing let pack = this.#getPack(selectedPack.id.replace("pack:", ""));
+                // same thing
+                const pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_reorderPack).call(this, pack, 1);
                 packsDiv.remove();
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
             });
             buttonWrapper.appendChild(goDownButton);
-            let applyButton = document.createElement('button');
+            const applyButton = document.createElement('button');
             applyButton.className = "button first";
             applyButton.addEventListener("click", () => { n.playUIClick(); location.reload(); });
             applyButton.style = "margin: 10px 0; float: right;padding: 10px";
             applyButton.innerHTML = `Apply <img class="button-icon" src="images/checkmark.svg" style="margin: 0 5">`;
             buttonWrapper.appendChild(applyButton);
-            let availableModsContainer = document.createElement("div");
+            const availableModsContainer = document.createElement("div");
             availableModsContainer.className = "container";
             availablePacksList.appendChild(availableModsContainer);
-            for (let polyMod of __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getAllPacks).call(this)) {
-                let modDiv = document.createElement('div');
-                modDiv.style = `--text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        text-align: left;
-        pointer-events: auto;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        position: relative;
-        margin: 10px 10px 0 10px;
-        padding: 0;`;
-                let modMainButton = document.createElement('button');
-                modMainButton.id = `pack:${polyMod.id}`;
-                modMainButton.className = "button";
-                modMainButton.style = `    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        position: relative;
-        border: none;
-        color: var(--text-color);
-        font-size: 32px;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        margin: 0;
-        padding: 0;
-        vertical-align: top;
-        width: 100%;
-        height: 100px;
-        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-        text-align: left;
-        white-space: nowrap;`;
-                modMainButton.innerHTML = `<img src="${polyMod.iconSrc}" style="max-width:100px;max-height=100px;">`;
-                modMainButton.addEventListener("click", () => {
+            for (const pack of __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getAllPacks).call(this)) {
+                const packDiv = document.createElement('div');
+                packDiv.style = `--text-color: #fff;
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                text-align: left;
+                pointer-events: auto;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                position: relative;
+                margin: 10px 10px 0 10px;
+                padding: 0;`;
+                const packMainButton = document.createElement('button');
+                packMainButton.id = `pack:${pack.packID}`;
+                packMainButton.className = "button";
+                packMainButton.style = `    --text-color: #fff;
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                position: relative;
+                border: none;
+                color: var(--text-color);
+                font-size: 32px;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                margin: 0;
+                padding: 0;
+                vertical-align: top;
+                width: 100%;
+                height: 100px;
+                clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+                text-align: left;
+                white-space: nowrap;`;
+                packMainButton.innerHTML = `<img src="${pack.iconSrc}" style="max-width:100px;max-height=100px;">`;
+                packMainButton.addEventListener("click", () => {
                     if (!pack.loaded) {
                         goUpButton.disabled = true;
                         goDownButton.disabled = true;
@@ -306,48 +315,46 @@ class PolyPackBase extends PolyMod {
                         loadButton.disabled = true;
                         goUpButton.disabled = false;
                         goDownButton.disabled = false;
-                        if (activatedPacksContainer.children[0] === modMainButton) {
+                        if (activatedPacksContainer.children[0] === packMainButton)
                             goUpButton.disabled = true;
-                        }
-                        if (activatedPacksContainer.children[activatedPacksContainer.children.length - 1] === modMainButton) {
+                        if (activatedPacksContainer.children[activatedPacksContainer.children.length - 1] === packMainButton)
                             goDownButton.disabled = true;
-                        }
                     }
-                    if (selectedPack === modMainButton) {
+                    if (selectedPack === packMainButton) {
                         goUpButton.disabled = true;
                         goDownButton.disabled = true;
                         unloadButton.disabled = true;
                         loadButton.disabled = true;
                         removeButton.disabled = true;
-                        modMainButton.style = `    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        position: relative;
-        border: none;
-        color: var(--text-color);
-        font-size: 32px;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        margin: 0;
-        padding: 0;
-        vertical-align: top;
-        width: 100%;
-        height: 100px;
-        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-        text-align: left;
-        white-space: nowrap;`;
+                        packMainButton.style = `    --text-color: #fff;
+                        --text-disabled-color: #5d6a7c;
+                        --surface-color: #28346a;
+                        --surface-secondary-color: #212b58;
+                        --surface-tertiary-color: #192042;
+                        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                        --button-color: #112052;
+                        --button-hover-color: #334b77;
+                        --button-active-color: #151f41;
+                        --button-disabled-color: #313d53;
+                        scrollbar-color: #7272c2 #223;
+                        -webkit-tap-highlight-color: transparent;
+                        font-family: ForcedSquare, Arial, sans-serif;
+                        line-height: 1;
+                        position: relative;
+                        border: none;
+                        color: var(--text-color);
+                        font-size: 32px;
+                        pointer-events: auto;
+                        user-select: none;
+                        cursor: pointer;
+                        margin: 0;
+                        padding: 0;
+                        vertical-align: top;
+                        width: 100%;
+                        height: 100px;
+                        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+                        text-align: left;
+                        white-space: nowrap;`;
                         selectedPack = null;
                     }
                     else {
@@ -382,193 +389,190 @@ class PolyPackBase extends PolyMod {
                         text-align: left;
                         white-space: nowrap;`;
                         }
-                        modMainButton.style = `    --text-color: #fff;
-                    --text-disabled-color: #5d6a7c;
-                    --surface-color: #28346a;
-                    --surface-secondary-color: #212b58;
-                    --surface-tertiary-color: #192042;
-                    --surface-transparent-color: rgba(40, 52, 106, 0.5);
-                    --button-color: #112052;
-                    --button-hover-color: #334b77;
-                    --button-active-color: #151f41;
-                    --button-disabled-color: #313d53;
-                    scrollbar-color: #7272c2 #223;
-                    -webkit-tap-highlight-color: transparent;
-                    font-family: ForcedSquare, Arial, sans-serif;
-                    background: var(--button-hover-color);
-                    line-height: 1;
-                    position: relative;
-                    border: none;
-                    color: var(--text-color);
-                    font-size: 32px;
-                    pointer-events: auto;
-                    user-select: none;
-                    cursor: pointer;
-                    margin: 0;
-                    padding: 0;
-                    vertical-align: top;
-                    width: 100%;
-                    height: 100px;
-                    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-                    text-align: left;
-                    white-space: nowrap;`;
-                        selectedPack = modMainButton;
+                        packMainButton.style = `    --text-color: #fff;
+                        --text-disabled-color: #5d6a7c;
+                        --surface-color: #28346a;
+                        --surface-secondary-color: #212b58;
+                        --surface-tertiary-color: #192042;
+                        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                        --button-color: #112052;
+                        --button-hover-color: #334b77;
+                        --button-active-color: #151f41;
+                        --button-disabled-color: #313d53;
+                        scrollbar-color: #7272c2 #223;
+                        -webkit-tap-highlight-color: transparent;
+                        font-family: ForcedSquare, Arial, sans-serif;
+                        background: var(--button-hover-color);
+                        line-height: 1;
+                        position: relative;
+                        border: none;
+                        color: var(--text-color);
+                        font-size: 32px;
+                        pointer-events: auto;
+                        user-select: none;
+                        cursor: pointer;
+                        margin: 0;
+                        padding: 0;
+                        vertical-align: top;
+                        width: 100%;
+                        height: 100px;
+                        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+                        text-align: left;
+                        white-space: nowrap;`;
+                        selectedPack = packMainButton;
                     }
                 });
-                let leftDiv = document.createElement("div");
+                const leftDiv = document.createElement("div");
                 leftDiv.style = `    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        color: var(--text-color);
-        font-size: 32px;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        text-align: left;
-        white-space: nowrap;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        display: inline-block;
-        vertical-align: top;`;
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                color: var(--text-color);
+                font-size: 32px;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                text-align: left;
+                white-space: nowrap;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                display: inline-block;
+                vertical-align: top;`;
                 leftDiv.innerHTML = `<p style="    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        text-align: left;
-        white-space: nowrap;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        margin: 0;
-        padding: 12px;
-        font-size: 28px;
-        color: var(--text-color);">  ${packActivatedLabel.name} </u></p><p style="    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        text-align: left;
-        white-space: nowrap;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        margin: 0;
-        padding: 12px;
-        font-size: 28px;
-        color: var(--text-color);">  By ${pack.packAuthor}</p>`;
-                let rightDiv = document.createElement("div");
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                text-align: left;
+                white-space: nowrap;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                margin: 0;
+                padding: 12px;
+                font-size: 28px;
+                color: var(--text-color);">  ${pack.packName} </u></p><p style="    --text-color: #fff;
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                text-align: left;
+                white-space: nowrap;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                margin: 0;
+                padding: 12px;
+                font-size: 28px;
+                color: var(--text-color);">  By ${pack.packAuthor}</p>`;
+                const rightDiv = document.createElement("div");
                 rightDiv.style = `    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        color: var(--text-color);
-        font-size: 32px;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        text-align: left;
-        white-space: nowrap;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        display: inline-block;
-        vertical-align: top;`;
-                modMainButton.appendChild(leftDiv);
-                modMainButton.appendChild(rightDiv);
-                modDiv.appendChild(modMainButton);
-                let infoButton = document.createElement("button");
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                color: var(--text-color);
+                font-size: 32px;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                text-align: left;
+                white-space: nowrap;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                display: inline-block;
+                vertical-align: top;`;
+                packMainButton.appendChild(leftDiv);
+                packMainButton.appendChild(rightDiv);
+                packDiv.appendChild(packMainButton);
+                const infoButton = document.createElement("button");
                 infoButton.innerHTML = `<img src="images/help.svg">`;
                 infoButton.className = "button";
                 infoButton.style = `    --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        border: none;
-        color: var(--text-color);
-        font-size: 32px;
-        pointer-events: auto;
-        user-select: none;
-        cursor: pointer;
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin: 8px;
-        padding: 0 9px;
-        background-color: var(--surface-color);
-        clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);`;
+                --text-disabled-color: #5d6a7c;
+                --surface-color: #28346a;
+                --surface-secondary-color: #212b58;
+                --surface-tertiary-color: #192042;
+                --surface-transparent-color: rgba(40, 52, 106, 0.5);
+                --button-color: #112052;
+                --button-hover-color: #334b77;
+                --button-active-color: #151f41;
+                --button-disabled-color: #313d53;
+                scrollbar-color: #7272c2 #223;
+                -webkit-tap-highlight-color: transparent;
+                font-family: ForcedSquare, Arial, sans-serif;
+                line-height: 1;
+                border: none;
+                color: var(--text-color);
+                font-size: 32px;
+                pointer-events: auto;
+                user-select: none;
+                cursor: pointer;
+                position: absolute;
+                right: 0;
+                top: 0;
+                margin: 8px;
+                padding: 0 9px;
+                background-color: var(--surface-color);
+                clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);`;
                 infoButton.addEventListener("click", () => {
                     packsDiv.remove();
                     n.playUIClick();
-                    __classPrivateFieldGet(this, _PolyPackBase_openDescription, "f").call(this, n, polyMod);
+                    __classPrivateFieldGet(this, _PolyPackBase_openDescription, "f").call(this, n, pack);
                 });
-                modDiv.appendChild(infoButton);
-                if (polyMod.loaded) {
-                    activatedPacksContainer.appendChild(modDiv);
-                }
-                else {
-                    availableModsContainer.appendChild(modDiv);
-                }
+                packDiv.appendChild(infoButton);
+                if (pack.loaded)
+                    activatedPacksContainer.appendChild(packDiv);
+                else
+                    availableModsContainer.appendChild(packDiv);
             }
-            let backButtonWrapper = document.createElement("div");
+            const backButtonWrapper = document.createElement("div");
             backButtonWrapper.className = "button-wapper";
-            let backButton = document.createElement('button');
+            const backButton = document.createElement('button');
             backButton.className = "button back";
             backButton.style = "margin: 10px 0; float: left;padding: 10px";
             backButton.innerHTML = `<img class="button-icon" src="images/back.svg" style="margin: 0 5"> Back`;
             backButton.addEventListener("click", () => {
                 n.playUIClick();
-                for (let intToUnhide of hideList) {
+                for (const intToUnhide of hideList)
                     menuDiv.children[intToUnhide].classList.remove("hidden");
-                }
                 packsDiv.remove();
             });
             backButtonWrapper.appendChild(backButton);
-            let addButton = document.createElement('button');
+            const addButton = document.createElement('button');
             addButton.className = "button back";
             addButton.style = "margin: 10px 0; float: left;padding: 10px";
             addButton.innerHTML = `<img class="button-icon" src="images/load.svg" style="margin: 0 5"> Add`;
@@ -578,25 +582,25 @@ class PolyPackBase extends PolyMod {
                 __classPrivateFieldGet(this, _PolyPackBase_promptUserForNewPack, "f").call(this, n);
             });
             backButtonWrapper.appendChild(addButton);
-            let removeButton = document.createElement('button');
+            const removeButton = document.createElement('button');
             removeButton.className = "button back";
             removeButton.style = "margin: 10px 0; float: left;padding: 10px; margin-left: 0px;";
             removeButton.innerHTML = `<img class="button-icon" src="images/erase.svg" style="margin: 0 5"> Remove`;
             removeButton.addEventListener("click", () => {
                 n.playUIClick();
-                this.removeMod(__classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", "")));
+                __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_removePack).call(this, __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", "")));
                 packsDiv.remove();
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
             });
             removeButton.disabled = true;
             backButtonWrapper.appendChild(removeButton);
-            let loadButton = document.createElement('button');
+            const loadButton = document.createElement('button');
             loadButton.className = "button first";
             loadButton.disabled = true;
             loadButton.style = "margin: 10px 0; float: right;padding: 10px; margin-right:2px;";
             loadButton.innerHTML = `Load <img class="button-icon" src="images/arrow_right.svg">`;
             loadButton.addEventListener("click", () => {
-                let pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
+                const pack = __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getPack).call(this, selectedPack.id.replace("pack:", ""));
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_setPackLoaded).call(this, pack, true);
                 packsDiv.remove();
                 __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
@@ -605,6 +609,7 @@ class PolyPackBase extends PolyMod {
             availablePacksList.appendChild(backButtonWrapper);
             packsDiv.appendChild(availablePacksList);
             packsDiv.appendChild(activatedPacksList);
+            // @ts-ignore
             menuDiv.appendChild(packsDiv);
         });
     }
@@ -635,6 +640,7 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
             packID: pack.id,
             packAuthor: pack.author,
             assetFolder: "assets",
+            iconSrc: "icon.png",
             loaded: false,
         });
     }
@@ -646,6 +652,14 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
         base: polyPackURL,
         loaded: false,
     });
+    __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
+}, _PolyPackBase_removePack = function _PolyPackBase_removePack(pack) {
+    if (!pack)
+        return;
+    const index = __classPrivateFieldGet(this, _PolyPackBase_packs, "f").indexOf(pack);
+    if (index > -1) {
+        __classPrivateFieldGet(this, _PolyPackBase_packs, "f").splice(index, 1);
+    }
     __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
 }, _PolyPackBase_savePacksToLocalStorage = function _PolyPackBase_savePacksToLocalStorage() {
     if (__classPrivateFieldGet(this, _PolyPackBase_packUrls, "f").length === 0) {
@@ -670,6 +684,7 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
                     packID: pack.id,
                     packAuthor: pack.author,
                     assetFolder: "assets",
+                    iconSrc: "icon.png",
                     loaded: packURL.loaded,
                 });
             }
@@ -703,4 +718,4 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
     __classPrivateFieldGet(this, _PolyPackBase_packs, "f")[currentIndex] = temp;
     __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
 };
-export const polyMod = new PolyPackBase();
+exports.polyMod = new PolyPackBase();
