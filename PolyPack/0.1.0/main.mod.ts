@@ -129,7 +129,7 @@ class PolyPackBase extends PolyMod {
     }
 
     // reorder pack function
-    #reorderPack(pack: Pack, delta: number): Pack | undefined {
+    #reorderPack(pack: Pack, delta: number) {
         if (!pack) return;
         const currentIndex = this.#packs.indexOf(pack);
         if ((currentIndex === 1) || delta > 0) return;
