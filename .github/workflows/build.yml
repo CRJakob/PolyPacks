@@ -25,5 +25,3 @@ jobs:
 
       - name: Compile TypeScript (using tsconfig.json)
         run: tsc --project tsconfig.json --pretty false --listFiles --diagnostics
-
-          done
