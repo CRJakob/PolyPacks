@@ -22,6 +22,11 @@ jobs:
       - name: Install TypeScript
         run: npm install typescript --no-save
 
+      # 1) Remove any existing JS so tsc always writes a fresh one
+      - name: Clean old JS
+        run: rm -f PolyPack/0.1.0/main.mod.js
+
+      # 2) Compile the TS file (writes main.mod.js next to main.mod.ts)
       - name: Compile main.mod.ts → main.mod.js
         run: |
           npx tsc \
@@ -30,3 +35,12 @@ jobs:
             --rootDir . \
             --outDir . \
             PolyPack/0.1.0/main.mod.ts
+
+      # 3) Debug: show the resulting file and its timestamp
+      - name: Verify output
+        run: |
+          echo "=== Contents of main.mod.js ==="
+          cat PolyPack/0.1.0/main.mod.js
+          echo
+          echo "=== File info ==="
+          ls -l PolyPack/0.1.0/main.mod.js
