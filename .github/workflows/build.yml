@@ -11,25 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Checkout your code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2) Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 3) Install TypeScript locally
       - name: Install TypeScript
         run: npm install typescript --no-save
 
-      # 4) Compile the single TS file to JS (overwrites existing .js)
       - name: Compile main.mod.ts → main.mod.js
         run: |
           npx tsc \
             --target ES2017 \
             --module commonjs \
-            --outFile PolyPack/0.1.0/main.mod.js \
+            --rootDir . \
+            --outDir . \
             PolyPack/0.1.0/main.mod.ts
