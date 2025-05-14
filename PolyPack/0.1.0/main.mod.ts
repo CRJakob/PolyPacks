@@ -34,16 +34,28 @@ class PolyPackBase extends PolyMod {
     init = (pmlInstance: PolyModLoader) => {
         this.#pml = pmlInstance;
         this.#localStorage = window.localStorage;
-        this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
-            const modButton = document.createElement("button");
-            modButton.className = "button button-image";
-            modButton.innerHTML = '<img src="images/arrow_left.svg">';
-            modButton.addEventListener("click", () => {
-                for(let Pack of this.#getAllPacks()){
-                    this.#createPackScreen;
-                }
-            });
-        });
+        //this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+        //    const modButton = document.createElement("button");
+        //    modButton.className = "button button-image";
+        //    modButton.innerHTML = '<img src="images/arrow_left.svg">';
+        //    modButton.addEventListener("click", () => {
+        //        for(let Pack of this.#getAllPacks()){
+        //            this.#createPackScreen;
+        //        }
+        //    });
+        //});
+
+        {
+            const e = document.createElement("button");
+            e.className = "button small",
+            e.innerHTML = '<img src="images/windowed.svg">',
+            e.appendChild(document.createTextNode("Polypacks")),
+            e.addEventListener("click", ( () => {#createPackScreen();}))
+        }
+              
+          }
+
+
         (async () => {
             this.#importPacks();
         })();
