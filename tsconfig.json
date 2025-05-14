@@ -5,11 +5,9 @@
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "outDir": "./",                  // Output to same structure
-    "rootDir": "./",                 // Keep original paths
     "noEmitOnError": true,
     "allowJs": true
   },
-  "include": ["PolyPack/**/*.ts"],
+  "include": ["PolyPack/0.1.0/main.mod.ts"],
   "exclude": ["PolyPack/tempcode"]
 }
