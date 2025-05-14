@@ -27,4 +27,4 @@ jobs:
         run: rm -f ./main.mod.js
 
       - name: Compile TypeScript (using tsconfig.json)
-        run: tsc --project tsconfig.json --force --pretty false --listFiles --diagnostics
+        run: tsc --project tsconfig.json --pretty false --listFiles --diagnostics
