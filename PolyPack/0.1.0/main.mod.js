@@ -33,6 +33,16 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         this.init = (pmlInstance) => {
             __classPrivateFieldSet(this, _PolyPackBase_pml, pmlInstance, "f");
             __classPrivateFieldSet(this, _PolyPackBase_localStorage, window.localStorage, "f");
+            __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", PolyModLoader_js_1.MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+                const modButton = document.createElement("button");
+                modButton.className = "button button-image";
+                modButton.innerHTML = '<img src="images/arrow_left.svg">';
+                modButton.addEventListener("click", () => {
+                    for (let Pack of __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getAllPacks).call(this)) {
+                        __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f");
+                    }
+                });
+            });
             (async () => {
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_importPacks).call(this);
             })();
