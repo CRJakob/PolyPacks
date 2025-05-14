@@ -1,4 +1,4 @@
-name: Compile TypeScript Mods
+name: Compile Ts
 
 on:
   push:
@@ -23,11 +23,7 @@ jobs:
       - name: Install TypeScript
         run: npm install -g typescript
 
-      - name: Compile main.mod.ts files in place
-        shell: bash
-        run: |
-          for file in PolyPack/*/main.mod.ts; do
-            dir=$(dirname "$file")
-            echo "Compiling $file..."
-            tsc "$file" --project tsconfig.json --outDir "$dir"
+      - name: Compile TypeScript (using tsconfig.json)
+        run: tsc --project tsconfig.json
+
           done
