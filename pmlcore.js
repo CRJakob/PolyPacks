@@ -1,151 +1,4 @@
-import { PolyMod, PolyModLoader } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
-// IMPORTANT NOTE TO ME: COMMENT OUT BELOW LINE BEFORE PUSHING
-// import { PolyMod, PolyModLoader } from "../PolyModLoader/PolyModLoader";
-
-type Pack = {
-    packName: string,
-    packID: string,
-    packAuthor: string,
-    assetFolder: string,
-
-    loaded: boolean,
-};
-
-type PackOverride = {
-    folder: string,
-    overrideFn: () => void,
-};
-
-class PolyPackBase extends PolyMod {
-    // Mod specific stuff
-    #pml: PolyModLoader
-    #localStorage: Storage
-    #polyVersion = "0.5.0"
-
-    // For PolyPacks
-    #packs: Array<Pack>
-    #packUrls: Array<{ base: string, loaded: boolean }>
-
-    // For registered pack mods
-    #packOverrides: Array<PackOverride>
-
-    init = (pmlInstance: PolyModLoader) => {
-        this.#pml = pmlInstance;
-        this.#localStorage = window.localStorage;
-        (async () => {
-            this.#importPacks();
-        })();
-    }
-
-    /**
-     * Register an asset folde to override.
-     * 
-     * @param folder - 
-     */
-    registerFolderOverride(
-        folder: string,
-        overrideFn: () => void
-    ) {}
-
-    #getPack(id: string): Pack | undefined {
-        for (const pack of this.#packs) {
-            if (pack.packID === id) return pack;
-        }
-    }
-
-    async #addPack(polyPackURL: string)
-    {
-        try {
-            const manifest = await fetch(`${polyPackURL}/manifest.json`).then(r => r.json());
-            const pack = manifest.polypack;
-            if (pack.targets.indexOf(this.#polyVersion) === -1) {
-                alert(`Polypack ${pack.name} does not support current version.`);
-                return;
-            }
-
-            this.#packs.push({
-                packName: pack.name,
-                packID: pack.id,
-                packAuthor: pack.author,
-                assetFolder: "assets",
-
-                loaded: false,
-            });
-  
-        } catch (err) {
-            alert("Could not find manifest for polypack");
-            console.error("Error in getting manifest: ", err);
-        }
-        this.#packUrls.push({
-            base: polyPackURL,
-            loaded: false,
-        });
-        this.#savePacksToLocalStorage();
-    }
-
-    #savePacksToLocalStorage() {
-        if (this.#packUrls.length === 0) {
-            this.#packUrls = [{
-                base: "",
-                loaded: true,
-            }];
-        }
-        this.#localStorage.setItem("polypacks", JSON.stringify(this.#packUrls));
-    }
-
-    async #importPacks() {
-        for (let packURL of this.#packUrls) {
-            try {
-                const manifestFile = await fetch(`${packURL.base}/manifest.json`).then(r => r.json());
-                let pack = manifestFile.polypack;
-                try {
-                    if (this.#getPack(pack.id)) {
-                        alert(`Duplicate PolyPack detected: ${pack.name}`);
-                        return;
-                    }
-                    this.#packs.push({
-                        packName: pack.name,
-                        packID: pack.id,
-                        packAuthor: pack.author,
-                        assetFolder: "assets",
-
-                        loaded: packURL.loaded,
-                    });
-                } catch (err) {
-                    alert(`Mod ${pack.name} failed to load.`);
-                    console.error("Error in loading pack: ", err);
-                }
-            } catch (err) {
-                alert(`Couldn't load polypack with URL ${packURL.base}.`);
-                console.error("Error in loading pack URL:", err);
-            }
-        }
-    }
-
-    #setPackLoaded(pack, state) {
-        if (!pack) return;
-        pack.loaded = state;
-        this.#savePacksToLocalStorage();
-    }
-
-    // reorder pack function
-    #reorderPack(pack: Pack, delta: number): Pack | undefined {
-        if (!pack) return;
-        const currentIndex = this.#packs.indexOf(pack);
-        if ((currentIndex === 1) || delta > 0) return;
-        if (currentIndex === null || currentIndex === undefined) {
-        alert("This pack isn't loaded");
-            return;
-        }
-        const temp = this.#packs[currentIndex + delta];
-        this.#packs[currentIndex + delta] = this.#packs[currentIndex];
-        this.#packs[currentIndex] = temp;
-        this.#savePacksToLocalStorage();
-    }
-
-    // UI STUFF
-
-    #openDescription = function(n, pack) {
+ openDescription = function(n, mod) {
         let menuDiv = document.getElementById("ui").children[0];
         let trackInfoDiv = document.createElement('div');
         trackInfoDiv.style = `    interpolate-size: allow-keywords;
@@ -209,16 +62,16 @@ class PolyPackBase extends PolyMod {
         goBackButton.addEventListener("click", () => {
             n.playUIClick();
             trackInfoDiv.remove();
-           this.#createPackScreen(n);
+           this.createModScreen(n);
         })
         containerDiv.appendChild(goBackButton);
         let infoDiv = document.createElement('div');
         infoDiv.innerHTML = `<h2> Loading... </h2>`;
-        fetch(`${pack.baseUrl}/description.html`).then(res => {
+        fetch(`${mod.baseUrl}/${mod.version}/description.html`).then(res => {
             if(res.status !== 200){
                 trackInfoDiv.remove();
-               this.#createPackScreen(n);
-                alert("This pack doesn't have a description file.");
+               this.createModScreen(n);
+                alert("This mod doesn't have a description file.");
                 return;
             } else {
                 return res.text();
@@ -230,34 +83,296 @@ class PolyPackBase extends PolyMod {
         trackInfoDiv.appendChild(containerDiv);
         menuDiv.appendChild(trackInfoDiv);
     }
-
-    // pml add pack screen
-    #promptUserForNewPack = (n) => {
+    
+    promptUserForNewMod = (n) => {
         let menuDiv = document.getElementById("ui").children[0];
     
         let promptDiv = document.createElement("div")
         promptDiv.className = "nickname";
         
-        let packUrlHead = document.createElement("h1");
-        packUrlHead.innerText = "Pack URL";
-        packUrlHead.style = "float: left;";
-        promptDiv.appendChild(packUrlHead);
+        let modUrlHead = document.createElement("h1");
+        modUrlHead.innerText = "Mod URL";
+        modUrlHead.style = "float: left;";
+        promptDiv.appendChild(modUrlHead);
     
         let urlInput = document.createElement("input")
         urlInput.type = "text";
         promptDiv.appendChild(urlInput);
- 
+    
+        let modVersionHead = document.createElement("h1");
+        modVersionHead.innerText = "Mod Version";
+        modVersionHead.style = "float: left;";
+        promptDiv.appendChild(modVersionHead);
+    
+        let versionInput = document.createElement("input")
+        versionInput.type = "text";
+        versionInput.placeholder = "latest";
+        promptDiv.appendChild(versionInput);
+        
+        let autoUpdateDiv = document.createElement('div');
+        autoUpdateDiv.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        text-align: left;
+        pointer-events: auto;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        margin: 10px;
+        display: flex;`;
+        autoUpdateDiv.innerHTML = `<p style="    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        pointer-events: auto;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        display: inline-block;
+        margin: 10px;
+        padding: 0;
+        min-width: 0;
+        white-space: wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+        font-size: 24px;
+        text-align: left;
+        color: var(--text-color);">Auto Update \n(Only if on latest)`;
+    
+        let autoUpdateVar = true;
+        let updateOnButton = document.createElement('button');
+        updateOnButton.innerText = "On";
+        updateOnButton.className = "button";
+        updateOnButton.addEventListener('click', () => {
+            n.playUIClick();
+            autoUpdateVar = true;
+            updateOnButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;
+        background-color: var(--button-hover-color);`;
+            updateOffButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        background-color: var(--button-color);
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;`;
+        })
+        updateOnButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;
+        background-color: var(--button-hover-color);`;
+        
+    
+        let updateOffButton = document.createElement('button');
+        updateOffButton.innerText = "Off";
+        updateOffButton.className = "button";
+        updateOffButton.addEventListener('click', () => {
+            n.playUIClick();
+            autoUpdateVar = false;
+            updateOnButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;
+        background-color: var(--button-color);`;
+            updateOffButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        background-color: var(--button-hover-color);
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;`;
+        })
+        updateOffButton.style = `    interpolate-size: allow-keywords;
+        --text-color: #fff;
+        --text-disabled-color: #5d6a7c;
+        --surface-color: #28346a;
+        --surface-secondary-color: #212b58;
+        --surface-tertiary-color: #192042;
+        --surface-transparent-color: rgba(40, 52, 106, 0.5);
+        --button-color: #112052;
+        --button-hover-color: #334b77;
+        --button-active-color: #151f41;
+        --button-disabled-color: #313d53;
+        scrollbar-color: #7272c2 #223;
+        -webkit-tap-highlight-color: transparent;
+        font-style: italic;
+        font-family: ForcedSquare, Arial, sans-serif;
+        line-height: 1;
+        position: relative;
+        margin: 0;
+        padding: 8px 18px;
+        background-color: var(--button-color);
+        border: none;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        color: var(--text-color);
+        font-size: 32px;
+        pointer-events: auto;
+        user-select: none;
+        cursor: pointer;
+        height: 48px;
+        white-space: nowrap;`;
+        autoUpdateDiv.appendChild(updateOffButton);
+        autoUpdateDiv.appendChild(updateOnButton);
+        promptDiv.appendChild(autoUpdateDiv);
+    
+        let warningh2 = document.createElement("h2");
+        warningh2.style = "color: #f66;margin:5px;";
+        warningh2.innerText = "Only install mods from trusted sources!";
+        promptDiv.appendChild(warningh2);
+    
         let importButton = document.createElement("button");
         importButton.style = "float: right;"
         importButton.className = "button right";
         importButton.innerHTML = `<img class="button-icon" src="images/import.svg"> Import`
         importButton.addEventListener("click", () => {
             n.playUIClick();
-            let packUrl = urlInput.value;
-            this.#addPack(packUrl).then(() => {
+            let modUrl = urlInput.value;
+            let modVersion = versionInput.value === "" ? "latest" : versionInput.value;
+            this.modPmlInstance.addMod({"base": modUrl, "version": modVersion, "loaded": false}).then(() => {
                 promptDiv.remove();
-               this.#createPackScreen(n);
-            })
+               this.createModScreen(n);
+            }, autoUpdateVar)
         })
         promptDiv.appendChild(importButton);
     
@@ -268,15 +383,14 @@ class PolyPackBase extends PolyMod {
         goBackButton.addEventListener("click", () => {
             n.playUIClick();
             promptDiv.remove();
-           this.#createPackScreen(n);
+           this.createModScreen(n);
         })
         promptDiv.appendChild(goBackButton);
     
         menuDiv.appendChild(promptDiv);
     }
-
-    // pml pack screen ui
-    #createPackScreen = (n) => {
+    
+    createModScreen = (n) => {
         let menuDiv;
         for(let elem of document.getElementById("ui").children) {
             if(elem.classList.contains("menu")) {
@@ -288,32 +402,32 @@ class PolyPackBase extends PolyMod {
             menuDiv.children[intToHide].classList.add("hidden")
         }
     
-        let selectedPack;
+        let selectedMod;
     
-        let packsDiv = document.createElement('div');
-        packsDiv.className = "track-info";
+        let modsDiv = document.createElement('div');
+        modsDiv.className = "track-info";
     
-        let availablePacksList = document.createElement("div");
-        availablePacksList.className = "leaderboard";
+        let availableModsList = document.createElement("div");
+        availableModsList.className = "leaderboard";
     
-        let availablePacksLabel = document.createElement("h2")
-        availablePacksLabel.textContent = "Available"
-        availablePacksList.appendChild(availablePacksLabel)
+        let availableModsLabel = document.createElement("h2")
+        availableModsLabel.textContent = "Available"
+        availableModsList.appendChild(availableModsLabel)
     
-        let activatedPacksList = document.createElement("div");
-        activatedPacksList.className = "leaderboard";
+        let activatedModsList = document.createElement("div");
+        activatedModsList.className = "leaderboard";
     
-        let packActivatedLabel = document.createElement("h2")
-        packActivatedLabel.textContent = "Loaded"
-        activatedPacksList.appendChild(packActivatedLabel)
+        let modActivatedLabel = document.createElement("h2")
+        modActivatedLabel.textContent = "Loaded"
+        activatedModsList.appendChild(modActivatedLabel)
     
-        let activatedPacksContainer = document.createElement("div")
-        activatedPacksContainer.className = "container";
-        activatedPacksList.appendChild(activatedPacksContainer);
+        let activatedModsContainer = document.createElement("div")
+        activatedModsContainer.className = "container";
+        activatedModsList.appendChild(activatedModsContainer);
     
         let buttonWrapper = document.createElement("div")
         buttonWrapper.className = "button-wapper"
-        activatedPacksList.appendChild(buttonWrapper)
+        activatedModsList.appendChild(buttonWrapper)
     
         let unloadButton = document.createElement('button');
         unloadButton.className = "button first";
@@ -321,10 +435,10 @@ class PolyPackBase extends PolyMod {
         unloadButton.style = "margin: 10px 0; float: left;padding: 10px; margin-left:2px;"
         unloadButton.innerHTML = `<img class="button-icon" src="images/arrow_left.svg"> Unload`;
         unloadButton.addEventListener("click", () => {
-            let pack = this.#getPack(selectedPack.id.replace("pack:", ""));
-            this.#setPackLoaded(pack, false);
-            packsDiv.remove();
-           this.#createPackScreen(n);
+            let mod = this.modPmlInstance.getMod(selectedMod.id.replace("mod:", ""));
+            this.modPmlInstance.setModLoaded(mod, false);
+            modsDiv.remove();
+           this.createModScreen(n);
         })
     
         buttonWrapper.appendChild(unloadButton);
@@ -335,10 +449,10 @@ class PolyPackBase extends PolyMod {
         goUpButton.style = "margin: 10px; float: left;padding: 10px"
         goUpButton.innerHTML = `<img class="button-icon" src="images/arrow_up.svg" style="margin: 0px 10px">`;
         goUpButton.addEventListener("click", () => {
-            let pack = this.#getPack(selectedPack.id.replace("pack:", ""));
-            this.#reorderPack(pack, -1);
-            packsDiv.remove();
-           this.#createPackScreen(n);
+            let mod = this.modPmlInstance.getMod(selectedMod.id.replace("mod:", ""));
+            this.modPmlInstance.reorderMod(mod, -1);
+            modsDiv.remove();
+           this.createModScreen(n);
         })
         buttonWrapper.appendChild(goUpButton);
     
@@ -348,10 +462,10 @@ class PolyPackBase extends PolyMod {
         goDownButton.style = "margin: 10px 0; float: left;padding: 10px"
         goDownButton.innerHTML = `<img class="button-icon" src="images/arrow_down.svg" style="margin: 0px 10px">`;
         goDownButton.addEventListener("click", () => {
-            // same thing let pack = this.#getPack(selectedPack.id.replace("pack:", ""));
-            this.#reorderPack(pack, 1);
-            packsDiv.remove();
-           this.#createPackScreen(n);
+            let mod = this.modPmlInstance.getMod(selectedMod.id.replace("mod:", ""));
+            this.modPmlInstance.reorderMod(mod, 1);
+            modsDiv.remove();
+           this.createModScreen(n);
         })
         buttonWrapper.appendChild(goDownButton);
     
@@ -364,8 +478,8 @@ class PolyPackBase extends PolyMod {
     
         let availableModsContainer = document.createElement("div")
         availableModsContainer.className = "container";
-        availablePacksList.appendChild(availableModsContainer);
-        for(let polyMod of this.getAllMods()) {
+        availableModsList.appendChild(availableModsContainer);
+        for(let polyMod of this.modPmlInstance.getAllMods()) {
             let modDiv = document.createElement('div');
             modDiv.style = `--text-color: #fff;
         --text-disabled-color: #5d6a7c;
@@ -389,7 +503,7 @@ class PolyPackBase extends PolyMod {
         padding: 0;`
     
             let modMainButton = document.createElement('button');
-            modMainButton.id = `pack:${polyMod.id}`;
+            modMainButton.id = `mod:${polyMod.id}`;
             modMainButton.className = "button"
             modMainButton.style = `    --text-color: #fff;
         --text-disabled-color: #5d6a7c;
@@ -434,14 +548,14 @@ class PolyPackBase extends PolyMod {
                     loadButton.disabled = true;
                     goUpButton.disabled = false;
                     goDownButton.disabled = false;
-                    if(activatedPacksContainer.children[0] === modMainButton) {
+                    if(activatedModsContainer.children[0] === modMainButton) {
                         goUpButton.disabled = true;
                     } 
-                    if(activatedPacksContainer.children[activatedPacksContainer.children.length - 1] === modMainButton) {
+                    if(activatedModsContainer.children[activatedModsContainer.children.length - 1] === modMainButton) {
                         goDownButton.disabled = true;
                     }
                 }
-                if(selectedPack === modMainButton) {
+                if(selectedMod === modMainButton) {
                     goUpButton.disabled = true;
                     goDownButton.disabled = true;
                     unloadButton.disabled = true;
@@ -476,10 +590,10 @@ class PolyPackBase extends PolyMod {
         clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
         text-align: left;
         white-space: nowrap;`
-                    selectedPack = null;
+                    selectedMod = null;
                 } else {
-                    if(selectedPack) {
-                        selectedPack.style = `    --text-color: #fff;
+                    if(selectedMod) {
+                        selectedMod.style = `    --text-color: #fff;
                         --text-disabled-color: #5d6a7c;
                         --surface-color: #28346a;
                         --surface-secondary-color: #212b58;
@@ -539,7 +653,7 @@ class PolyPackBase extends PolyMod {
                     clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
                     text-align: left;
                     white-space: nowrap;`
-                    selectedPack = modMainButton;
+                    selectedMod = modMainButton;
                 }
             })
     
@@ -672,13 +786,13 @@ class PolyPackBase extends PolyMod {
         background-color: var(--surface-color);
         clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);`;
             infoButton.addEventListener("click", () => {
-                packsDiv.remove();
+                modsDiv.remove();
                 n.playUIClick();
-                this.#openDescription(n, polyMod);
+                this.openDescription(n, polyMod);
             })
             modDiv.appendChild(infoButton);
             if(polyMod.isLoaded) {
-                activatedPacksContainer.appendChild(modDiv)
+                activatedModsContainer.appendChild(modDiv)
             } else {
                 availableModsContainer.appendChild(modDiv);
             }
@@ -696,7 +810,7 @@ class PolyPackBase extends PolyMod {
             for(let intToUnhide of hideList) {
                 menuDiv.children[intToUnhide].classList.remove("hidden")
             }
-            packsDiv.remove()
+            modsDiv.remove()
         })
         backButtonWrapper.appendChild(backButton);
     
@@ -706,8 +820,8 @@ class PolyPackBase extends PolyMod {
         addButton.innerHTML = `<img class="button-icon" src="images/load.svg" style="margin: 0 5"> Add`;
         addButton.addEventListener("click", () => {
             n.playUIClick();
-            packsDiv.remove();
-            this.#promptUserForNewPack(n);
+            modsDiv.remove();
+            this.promptUserForNewMod(n);
         })
         backButtonWrapper.appendChild(addButton)
     
@@ -717,9 +831,9 @@ class PolyPackBase extends PolyMod {
         removeButton.innerHTML = `<img class="button-icon" src="images/erase.svg" style="margin: 0 5"> Remove`;
         removeButton.addEventListener("click", () => {
             n.playUIClick();
-            this.removeMod(this.#getPack(selectedPack.id.replace("pack:", "")));
-            packsDiv.remove();
-           this.#createPackScreen(n);
+            this.modPmlInstance.removeMod(this.modPmlInstance.getMod(selectedMod.id.replace("mod:", "")));
+            modsDiv.remove();
+           this.createModScreen(n);
         })
         removeButton.disabled = true;
         backButtonWrapper.appendChild(removeButton)
@@ -730,19 +844,48 @@ class PolyPackBase extends PolyMod {
         loadButton.style = "margin: 10px 0; float: right;padding: 10px; margin-right:2px;"
         loadButton.innerHTML = `Load <img class="button-icon" src="images/arrow_right.svg">`;
         loadButton.addEventListener("click", () => {
-            let pack = this.#getPack(selectedPack.id.replace("pack:", ""));
-            this.#setPackLoaded(pack, true);
-            packsDiv.remove();
-           this.#createPackScreen(n);
+            let mod = this.modPmlInstance.getMod(selectedMod.id.replace("mod:", ""));
+            this.modPmlInstance.setModLoaded(mod, true);
+            modsDiv.remove();
+           this.createModScreen(n);
         })
     
         backButtonWrapper.appendChild(loadButton);
-        availablePacksList.appendChild(backButtonWrapper)
+        availableModsList.appendChild(backButtonWrapper)
         
-        packsDiv.appendChild(availablePacksList)
-        packsDiv.appendChild(activatedPacksList)
-        menuDiv.appendChild(packsDiv);
+        modsDiv.appendChild(availableModsList)
+        modsDiv.appendChild(activatedModsList)
+        menuDiv.appendChild(modsDiv);
     }
-}
 
-export const polyMod = new PolyPackBase();
+    init = (pmlInstance) => {
+        this.modPmlInstance = pmlInstance;
+        console.log(`Hello from ${this.name}!`)
+        this.modPmlInstance.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+            const modButton = document.createElement("button");
+            modButton.className = "button button-image";
+            modButton.innerHTML = '<img src="images/load.svg">';
+            modButton.addEventListener("click", () => {
+                n.playUIClick();
+                for(let polyMod of ActivePolyModLoader.getAllMods()){
+                    if(polyMod.id === "pmlcore") {
+                        console.log(polyMod);
+                        polyMod.createModScreen(n);
+                    }
+                }
+            });
+            
+            
+            const modTextContainer = document.createElement("p");
+            modTextContainer.textContent = "Mods"
+            modButton.appendChild(modTextContainer);
+
+            wD(this, nD, "f").appendChild(modButton);
+            wD(this, iD, "f").push(modButton);
+        })
+    }
+    postInit = () => {
+        console.log(`Hello from ${this.name}, but postInit this time!`);
+    }
+    simInit = () => {
+    }
