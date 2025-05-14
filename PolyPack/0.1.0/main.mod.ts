@@ -88,6 +88,15 @@ class PolyPackBase extends PolyMod {
         this.#savePacksToLocalStorage();
     }
 
+    #removePack(pack) {
+        if (!pack) return;
+        const index = this.#packs.indexOf(pack);
+        if (index > -1) {
+            this.#packs.splice(index, 1);
+        }
+        this.#savePacksToLocalStorage();
+    }
+
     #savePacksToLocalStorage() {
         if (this.#packUrls.length === 0) {
             this.#packUrls = [{
