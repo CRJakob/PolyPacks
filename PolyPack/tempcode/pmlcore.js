@@ -468,7 +468,7 @@ class PMLCoreMod extends PolyMod {
             let mod = this.modPmlInstance.getMod(selectedMod.id.replace("mod:", ""));
             this.modPmlInstance.reorderMod(mod, 1);
             modsDiv.remove();
-           this.createModScreen(n);
+           this.createModScreen();
         })
         buttonWrapper.appendChild(goDownButton);
     

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { PolyMod, PolyModLoader } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+import { PolyMod, PolyModLoader, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
 // IMPORTANT NOTE TO ME: COMMENT OUT BELOW LINE BEFORE PUSHING
 // import { PolyMod, PolyModLoader } from "../PolyModLoader/PolyModLoader";
 
@@ -34,6 +34,16 @@ class PolyPackBase extends PolyMod {
     init = (pmlInstance: PolyModLoader) => {
         this.#pml = pmlInstance;
         this.#localStorage = window.localStorage;
+        this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+            const modButton = document.createElement("button");
+            modButton.className = "button button-image";
+            modButton.innerHTML = '<img src="images/arrow_left.svg">';
+            modButton.addEventListener("click", () => {
+                for(let Pack of this.#getAllPacks()){
+                    this.#createPackScreen;
+                }
+            });
+        });
         (async () => {
             this.#importPacks();
         })();
