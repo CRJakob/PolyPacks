@@ -24,4 +24,4 @@ jobs:
         run: npm install -g typescript
 
       - name: Compile TypeScript (using tsconfig.json)
-        run: tsc --project tsconfig.json --pretty false --listFiles --diagnostics
+        run: tsc --project tsconfig.json --force --pretty false --listFiles --diagnostics
