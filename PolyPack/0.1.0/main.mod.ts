@@ -18,7 +18,7 @@ type PackOverride = {
     overrideFn: () => void,
 };
 
-class PolyPackBase extends PolyMod {
+export class PolyPackBase extends PolyMod {
     // Mod specific stuff
     #pml: PolyModLoader
     #localStorage: Storage
