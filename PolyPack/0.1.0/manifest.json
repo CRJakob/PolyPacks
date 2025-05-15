@@ -1,0 +1,12 @@
+{
+    "polymod": {
+        "name": "PolyPacks",
+        "id": "polypacks",
+        "author": "CR Jakob, Lockheed SR-71 Blackbird",
+        "targets": [
+            "0.5.0"
+        ],
+        "main": "main.mod.js"
+    },
+    "dependencies": []
+}
