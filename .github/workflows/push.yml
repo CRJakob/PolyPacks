@@ -1,0 +1,52 @@
+# .github/workflows/promote-to-main.yml
+name: Push Update to main
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Check out the dev branch (source)
+      - name: Checkout dev
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+          fetch-depth: 0
+          persist-credentials: true
+
+      # 2) Check out the main branch into a separate folder
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main
+          fetch-depth: 0
+
+      # 3) Copy latest.json and PolyPack/ from dev workspace → main workspace
+      - name: Copy files to main
+        run: |
+          # remove any old copies in main
+          rm -rf main/latest.json main/PolyPack
+          # copy from root of dev checkout
+          cp latest.json main/latest.json
+          cp -R PolyPack main/PolyPack
+
+      # 4) Commit & push if there are changes
+      - name: Commit & push to main
+        run: |
+          cd main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add latest.json PolyPack
+          if git diff --cached --quiet; then
+            echo "ℹ️ No changes to promote."
+          else
+            git commit -m "chore: promote latest.json & PolyPack from dev → main"
+            git push origin main
+          fi
