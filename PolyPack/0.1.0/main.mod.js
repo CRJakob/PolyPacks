@@ -12,7 +12,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 var _PolyPackBase_instances, _PolyPackBase_pml, _PolyPackBase_localStorage, _PolyPackBase_polyVersion, _PolyPackBase_packs, _PolyPackBase_packUrls, _PolyPackBase_packOverrides, _PolyPackBase_getPack, _PolyPackBase_getAllPacks, _PolyPackBase_addPack, _PolyPackBase_removePack, _PolyPackBase_savePacksToLocalStorage, _PolyPackBase_importPacks, _PolyPackBase_setPackLoaded, _PolyPackBase_reorderPack, _PolyPackBase_openDescription, _PolyPackBase_promptUserForNewPack, _PolyPackBase_createPackScreen;
 // @ts-ignore
 import { PolyMod, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
-class PolyPackBase extends PolyMod {
+export class PolyPackBase extends PolyMod {
     constructor() {
         super(...arguments);
         _PolyPackBase_instances.add(this);
