@@ -63,8 +63,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         };
         // UI STUFF
         _PolyPackBase_openDescription.set(this, function (n, pack) {
-            var _a;
-            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const menuDiv = document.getElementById("ui")?.children[0];
             const trackInfoDiv = document.createElement('div');
             trackInfoDiv.style = `    interpolate-size: allow-keywords;
         --text-color: #fff;
@@ -153,8 +152,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         );
         // pml add pack screen
         _PolyPackBase_promptUserForNewPack.set(this, (n) => {
-            var _a;
-            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const menuDiv = document.getElementById("ui")?.children[0];
             const promptDiv = document.createElement("div");
             promptDiv.className = "nickname";
             const packUrlHead = document.createElement("h1");
@@ -193,9 +191,8 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         );
         // pml pack screen ui
         _PolyPackBase_createPackScreen.set(this, (n) => {
-            var _a;
             let menuDiv;
-            for (const elem of (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children) {
+            for (const elem of document.getElementById("ui")?.children) {
                 if (elem.classList.contains("menu")) {
                     menuDiv = elem;
                 }
