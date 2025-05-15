@@ -634,7 +634,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
             folder: folder,
             overrideFn: overrideFn,
         });
-        // hmm, ill be a bit more free after sunday so that works ig
+        // hmm i dont have errors
     }
 }
 _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _PolyPackBase_polyVersion = new WeakMap(), _PolyPackBase_packs = new WeakMap(), _PolyPackBase_packUrls = new WeakMap(), _PolyPackBase_packOverrides = new WeakMap(), _PolyPackBase_openDescription = new WeakMap(), _PolyPackBase_promptUserForNewPack = new WeakMap(), _PolyPackBase_createPackScreen = new WeakMap(), _PolyPackBase_instances = new WeakSet(), _PolyPackBase_getPack = function _PolyPackBase_getPack(id) {
