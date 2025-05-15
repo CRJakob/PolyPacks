@@ -66,9 +66,9 @@ class PolyPackBase extends PolyMod {
             folder: folder,
             overrideFn: overrideFn,
         });
-        // hmm, ill be a bit more free after sunday so that works ig
+        // hmm i dont have errors
     }
-    // alr lemme push it and test the mod if it imports
+    //look in discord
     #getPack(id: string): Pack | undefined {
         for (const pack of this.#packs) {
             if (pack.packID === id) return pack;
