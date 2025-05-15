@@ -1,72 +1,74 @@
-# .github/workflows/promote-to-main-manual.yml
-name: Promote & Release to main
+name: Promote PolyPack to main
 
 on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # allow pushing commits & creating releases
+  contents: write  # allow pushing and creating releases
 
 jobs:
   promote:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Check out dev (the source of truth)
-      - name: Checkout dev
+      - name: Checkout dev branch
         uses: actions/checkout@v3
         with:
           ref: dev
           fetch-depth: 0
           persist-credentials: true
 
-      # 2) Check out main into ./main
-      - name: Checkout main
+      - name: Checkout main branch into ./main
         uses: actions/checkout@v3
         with:
           ref: main
           path: main
           fetch-depth: 0
 
-      # 3) Copy latest.json + PolyPack/, then prune unwanted files
-      - name: Copy & prune files
+      - name: Copy and clean files
         run: |
-          # clear out old copies
-          rm -rf main/latest.json main/PolyPack
-          # copy from dev → main
-          cp latest.json main/latest.json
-          cp -R PolyPack main/PolyPack
-          # remove tempcode folder
-          rm -rf main/PolyPack/tempcode
-          # remove any main.mod.ts under versioned dirs
-          rm -f main/PolyPack/*.*.*/main.mod.ts
+          # Clean target files in main
+          rm -f main/latest.json
+          rm -rf main/PolyPack
 
-      # 4) Commit & push only if something changed
-      - name: Commit & push to main
+          # Recreate PolyPack folder in main
+          mkdir -p main/PolyPack
+
+          # Copy PolyPack/ from dev to main
+          cp -r PolyPack/* main/PolyPack/
+
+          # Remove unwanted subfolder
+          rm -rf main/PolyPack/tempcode
+
+          # Remove all PolyPack/*.*.*/main.mod.ts
+          find main/PolyPack -type f -path "*/[0-9]*.[0-9]*.[0-9]*/main.mod.ts" -delete
+
+      - name: Commit and push if changes exist
         id: commit
         run: |
           cd main
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add latest.json PolyPack
+          git add PolyPack/latest.json PolyPack
           if git diff --cached --quiet; then
+            echo "No changes to commit."
             echo "::set-output name=changed::false"
-            echo "ℹ️ No changes to promote."
           else
-            git commit -m "chore: promote latest.json & PolyPack from dev → main"
+            git commit -m "chore: promote PolyPack/latest.json and contents from dev"
             git push origin main
             echo "::set-output name=changed::true"
           fi
 
-      # 5) Create a GitHub release for every run
       - name: Create GitHub Release
+        if: steps.commit.outputs.changed == 'true'
         uses: actions/create-release@v1
         with:
           tag_name: "release-${{ github.run_number }}"
           release_name: "Release ${{ github.run_number }}"
           body: |
-            Automated promotion of **latest.json** & **PolyPack/**  
-            from `dev` → `main` on run #${{ github.run_number }}.
+            Promoted **PolyPack/latest.json** and related contents from `dev` to `main`.
+            - Skipped: `PolyPack/tempcode/`
+            - Skipped: `PolyPack/*.*.*/main.mod.ts`
           draft: false
           prerelease: false
         env:
