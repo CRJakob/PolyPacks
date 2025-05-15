@@ -1,0 +1,58 @@
+name: Compile & Commit TypeScript on dev
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write  # allow pushing back
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout the full repo so we can push commits
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0         # need full history for push
+          persist-credentials: true  # use the GITHUB_TOKEN for pushes
+
+      # 2) Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3) Install TypeScript
+      - name: Install TypeScript
+        run: npm install typescript --no-save
+
+      # 4) Clean any existing JS so we guarantee a fresh build
+      - name: Remove old JS
+        run: rm -f PolyPack/0.1.0/main.mod.js
+
+      # 5) Compile TS → JS (overwrites/creates main.mod.js)
+      - name: Compile main.mod.ts → main.mod.js
+        run: |
+          npx tsc \
+            --target ES2020 \
+            --module commonjs \
+            --rootDir . \
+            --outDir . \
+            PolyPack/0.1.0/main.mod.ts
+
+      # 6) Commit & push if the JS changed
+      - name: Commit compiled JS back to dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add PolyPack/0.1.0/main.mod.js
+          if git diff --cached --quiet; then
+            echo "✅ No changes in main.mod.js – nothing to commit"
+          else
+            git commit -m "chore: compile main.mod.js [skip ci]"
+            git push origin dev
+          fi
