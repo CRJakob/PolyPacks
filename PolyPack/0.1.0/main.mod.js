@@ -666,8 +666,8 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
         });
     }
     catch (err) {
-        alert("Could not find manifest for polypack");
-        console.error("Error in getting manifest: ", err);
+        alert("Could not import PolyPack, check console for errors and report them to the pack creator");
+        console.error("Error in getting importing Polypadk: ", err);
     }
     __classPrivateFieldGet(this, _PolyPackBase_packUrls, "f").push({
         base: polyPackURL,
