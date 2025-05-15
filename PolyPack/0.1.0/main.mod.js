@@ -1,4 +1,3 @@
-"use strict";
 var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
@@ -11,11 +10,9 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _PolyPackBase_instances, _PolyPackBase_pml, _PolyPackBase_localStorage, _PolyPackBase_polyVersion, _PolyPackBase_packs, _PolyPackBase_packUrls, _PolyPackBase_packOverrides, _PolyPackBase_getPack, _PolyPackBase_getAllPacks, _PolyPackBase_addPack, _PolyPackBase_removePack, _PolyPackBase_savePacksToLocalStorage, _PolyPackBase_importPacks, _PolyPackBase_setPackLoaded, _PolyPackBase_reorderPack, _PolyPackBase_openDescription, _PolyPackBase_promptUserForNewPack, _PolyPackBase_createPackScreen;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.polyMod = void 0;
 // @ts-ignore
-const PolyModLoader_js_1 = require("https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js");
-class PolyPackBase extends PolyModLoader_js_1.PolyMod {
+import { PolyMod, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+class PolyPackBase extends PolyMod {
     constructor() {
         super(...arguments);
         _PolyPackBase_instances.add(this);
@@ -26,22 +23,36 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         // For PolyPacks
         );
         // For PolyPacks
-        _PolyPackBase_packs.set(this, void 0);
-        _PolyPackBase_packUrls.set(this, void 0);
+        _PolyPackBase_packs.set(this, []);
+        _PolyPackBase_packUrls.set(this, []
         // For registered pack mods
-        _PolyPackBase_packOverrides.set(this, void 0);
+        );
+        // For registered pack mods
+        _PolyPackBase_packOverrides.set(this, []);
         this.init = (pmlInstance) => {
             __classPrivateFieldSet(this, _PolyPackBase_pml, pmlInstance, "f");
             __classPrivateFieldSet(this, _PolyPackBase_localStorage, window.localStorage, "f");
-            __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", PolyModLoader_js_1.MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
-                const modButton = document.createElement("button");
-                modButton.className = "button button-image";
-                modButton.innerHTML = '<img src="images/arrow_left.svg">';
-                modButton.addEventListener("click", () => {
-                    for (let Pack of __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_getAllPacks).call(this)) {
-                        __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f");
-                    }
-                });
+            //this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+            //    const modButton = document.createElement("button");
+            //    modButton.className = "button button-image";
+            //    modButton.innerHTML = '<img src="images/arrow_left.svg">';
+            //    modButton.addEventListener("click", () => {
+            //        for(let Pack of this.#getAllPacks()){
+            //            this.#createPackScreen;
+            //        }
+            //    });
+            //});
+            __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+                const e = document.createElement("button");
+                e.className = "button small";
+                e.innerHTML = '<img src="images/windowed.svg">';
+                e.appendChild(document.createTextNode("Polypacks"));
+                e.addEventListener("click", (() => {
+                    // @ts-ignore
+                    n.playUIClick();
+                    // @ts-ignore
+                    __classPrivateFieldGet(this, _PolyPackBase_createPackScreen, "f").call(this, n);
+                }));
             });
             (async () => {
                 __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_importPacks).call(this);
@@ -49,8 +60,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         };
         // UI STUFF
         _PolyPackBase_openDescription.set(this, function (n, pack) {
-            var _a;
-            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const menuDiv = document.getElementById("ui")?.children[0];
             const trackInfoDiv = document.createElement('div');
             trackInfoDiv.style = `    interpolate-size: allow-keywords;
         --text-color: #fff;
@@ -139,8 +149,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         );
         // pml add pack screen
         _PolyPackBase_promptUserForNewPack.set(this, (n) => {
-            var _a;
-            const menuDiv = (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children[0];
+            const menuDiv = document.getElementById("ui")?.children[0];
             const promptDiv = document.createElement("div");
             promptDiv.className = "nickname";
             const packUrlHead = document.createElement("h1");
@@ -179,9 +188,8 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         );
         // pml pack screen ui
         _PolyPackBase_createPackScreen.set(this, (n) => {
-            var _a;
             let menuDiv;
-            for (const elem of (_a = document.getElementById("ui")) === null || _a === void 0 ? void 0 : _a.children) {
+            for (const elem of document.getElementById("ui")?.children) {
                 if (elem.classList.contains("menu")) {
                     menuDiv = elem;
                 }
@@ -728,4 +736,4 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
     __classPrivateFieldGet(this, _PolyPackBase_packs, "f")[currentIndex] = temp;
     __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
 };
-exports.polyMod = new PolyPackBase();
+export const polyMod = new PolyPackBase();

@@ -25,11 +25,11 @@ class PolyPackBase extends PolyMod {
     #polyVersion = "0.5.0"
 
     // For PolyPacks
-    #packs: Array<Pack>
-    #packUrls: Array<{ base: string, loaded: boolean }>
+    #packs: Array<Pack> = []
+    #packUrls: Array<{ base: string, loaded: boolean }> = []
 
     // For registered pack mods
-    #packOverrides: Array<PackOverride>
+    #packOverrides: Array<PackOverride> = []
 
     init = (pmlInstance: PolyModLoader) => {
         this.#pml = pmlInstance;
@@ -45,16 +45,18 @@ class PolyPackBase extends PolyMod {
         //    });
         //});
 
-        {
+        this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
             const e = document.createElement("button");
-            e.className = "button small",
-            e.innerHTML = '<img src="images/windowed.svg">',
-            e.appendChild(document.createTextNode("Polypacks")),
-            e.addEventListener("click", ( () => {#createPackScreen();}))
-        }
-              
-          }
-
+            e.className = "button small";
+            e.innerHTML = '<img src="images/windowed.svg">';
+            e.appendChild(document.createTextNode("Polypacks"));
+            e.addEventListener("click", (() => {
+                // @ts-ignore
+                n.playUIClick();
+                // @ts-ignore
+                this.#createPackScreen(n);
+            }));
+        });
 
         (async () => {
             this.#importPacks();
