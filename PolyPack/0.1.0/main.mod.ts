@@ -103,8 +103,8 @@ class PolyPackBase extends PolyMod {
             });
 
         } catch (err) {
-            alert("Could not find manifest for polypack");
-            console.error("Error in getting manifest: ", err);
+            alert("Could not import PolyPack, check console for errors and report them to the pack creator");
+            console.error("Error in getting importing Polypadk: ", err);
         }
         this.#packUrls.push({
             base: polyPackURL,
