@@ -1,4 +1,3 @@
-"use strict";
 var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
@@ -11,11 +10,9 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _PolyPackBase_instances, _PolyPackBase_pml, _PolyPackBase_localStorage, _PolyPackBase_polyVersion, _PolyPackBase_packs, _PolyPackBase_packUrls, _PolyPackBase_packOverrides, _PolyPackBase_getPack, _PolyPackBase_getAllPacks, _PolyPackBase_addPack, _PolyPackBase_removePack, _PolyPackBase_savePacksToLocalStorage, _PolyPackBase_importPacks, _PolyPackBase_setPackLoaded, _PolyPackBase_reorderPack, _PolyPackBase_openDescription, _PolyPackBase_promptUserForNewPack, _PolyPackBase_createPackScreen;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.polyMod = void 0;
 // @ts-ignore
-const PolyModLoader_js_1 = require("https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js");
-class PolyPackBase extends PolyModLoader_js_1.PolyMod {
+import { PolyMod, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+class PolyPackBase extends PolyMod {
     constructor() {
         super(...arguments);
         _PolyPackBase_instances.add(this);
@@ -35,7 +32,7 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         this.init = (pmlInstance) => {
             __classPrivateFieldSet(this, _PolyPackBase_pml, pmlInstance, "f");
             __classPrivateFieldSet(this, _PolyPackBase_localStorage, window.localStorage, "f");
-            __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", PolyModLoader_js_1.MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
+            __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
                 const e = document.createElement("button");
                 e.className = "button small";
                 e.innerHTML = '<img src="images/windowed.svg">';
@@ -56,59 +53,59 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
             const menuDiv = document.getElementById("ui")?.children[0];
             const trackInfoDiv = document.createElement('div');
             trackInfoDiv.style = `    interpolate-size: allow-keywords;
-        --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        pointer-events: none;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        text-align: center;
-        font-style: italic;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        position: absolute;
-        left: calc(50% - 1050px / 2);
-        top: 0;
-        z-index: 2;
-        display: flex;
-        margin: 0;
-        padding: 0;
-        width: 1000px;
-        height: 100%;`;
+            --text-color: #fff;
+            --text-disabled-color: #5d6a7c;
+            --surface-color: #28346a;
+            --surface-secondary-color: #212b58;
+            --surface-tertiary-color: #192042;
+            --surface-transparent-color: rgba(40, 52, 106, 0.5);
+            --button-color: #112052;
+            --button-hover-color: #334b77;
+            --button-active-color: #151f41;
+            --button-disabled-color: #313d53;
+            scrollbar-color: #7272c2 #223;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            text-align: center;
+            font-style: italic;
+            font-family: ForcedSquare, Arial, sans-serif;
+            line-height: 1;
+            position: absolute;
+            left: calc(50% - 1050px / 2);
+            top: 0;
+            z-index: 2;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            width: 1000px;
+            height: 100%;`;
             const containerDiv = document.createElement("div");
             containerDiv.style = `    interpolate-size: allow-keywords;
-        --text-color: #fff;
-        --text-disabled-color: #5d6a7c;
-        --surface-color: #28346a;
-        --surface-secondary-color: #212b58;
-        --surface-tertiary-color: #192042;
-        --surface-transparent-color: rgba(40, 52, 106, 0.5);
-        --button-color: #112052;
-        --button-hover-color: #334b77;
-        --button-active-color: #151f41;
-        --button-disabled-color: #313d53;
-        scrollbar-color: #7272c2 #223;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        text-align: left;
-        font-style: italic;
-        font-family: ForcedSquare, Arial, sans-serif;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
-        flex-grow: 1;
-        background-color: var(--surface-secondary-color);
-        overflow-x: hidden;
-        overflow-y: scroll;
-        pointer-events: auto;`;
+            --text-color: #fff;
+            --text-disabled-color: #5d6a7c;
+            --surface-color: #28346a;
+            --surface-secondary-color: #212b58;
+            --surface-tertiary-color: #192042;
+            --surface-transparent-color: rgba(40, 52, 106, 0.5);
+            --button-color: #112052;
+            --button-hover-color: #334b77;
+            --button-active-color: #151f41;
+            --button-disabled-color: #313d53;
+            scrollbar-color: #7272c2 #223;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            text-align: left;
+            font-style: italic;
+            font-family: ForcedSquare, Arial, sans-serif;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+            flex-grow: 1;
+            background-color: var(--surface-secondary-color);
+            overflow-x: hidden;
+            overflow-y: scroll;
+            pointer-events: auto;`;
             const goBackButton = document.createElement("button");
             goBackButton.style = "float: left;";
             goBackButton.className = "button left";
@@ -634,7 +631,6 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
             folder: folder,
             overrideFn: overrideFn,
         });
-        // hmm i dont have errors
     }
 }
 _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _PolyPackBase_polyVersion = new WeakMap(), _PolyPackBase_packs = new WeakMap(), _PolyPackBase_packUrls = new WeakMap(), _PolyPackBase_packOverrides = new WeakMap(), _PolyPackBase_openDescription = new WeakMap(), _PolyPackBase_promptUserForNewPack = new WeakMap(), _PolyPackBase_createPackScreen = new WeakMap(), _PolyPackBase_instances = new WeakSet(), _PolyPackBase_getPack = function _PolyPackBase_getPack(id) {
@@ -735,4 +731,4 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
     __classPrivateFieldGet(this, _PolyPackBase_packs, "f")[currentIndex] = temp;
     __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
 };
-exports.polyMod = new PolyPackBase();
+export const polyMod = new PolyPackBase();
