@@ -35,16 +35,6 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
         this.init = (pmlInstance) => {
             __classPrivateFieldSet(this, _PolyPackBase_pml, pmlInstance, "f");
             __classPrivateFieldSet(this, _PolyPackBase_localStorage, window.localStorage, "f");
-            //this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
-            //    const modButton = document.createElement("button");
-            //    modButton.className = "button button-image";
-            //    modButton.innerHTML = '<img src="images/arrow_left.svg">';
-            //    modButton.addEventListener("click", () => {
-            //        for(let Pack of this.#getAllPacks()){
-            //            this.#createPackScreen;
-            //        }
-            //    });
-            //});
             __classPrivateFieldGet(this, _PolyPackBase_pml, "f").registerFuncMixin("hD", PolyModLoader_js_1.MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
                 const e = document.createElement("button");
                 e.className = "button small";
@@ -637,9 +627,15 @@ class PolyPackBase extends PolyModLoader_js_1.PolyMod {
     /**
      * Register an asset folde to override.
      *
-     * @param folder -
+     * @param folder - The folder name in polytrack under which the files are overriden.
      */
-    registerFolderOverride(folder, overrideFn) { }
+    registerFolderOverride(folder, overrideFn) {
+        __classPrivateFieldGet(this, _PolyPackBase_packOverrides, "f").push({
+            folder: folder,
+            overrideFn: overrideFn,
+        });
+        // hmm, ill be a bit more free after sunday so that works ig
+    }
 }
 _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _PolyPackBase_polyVersion = new WeakMap(), _PolyPackBase_packs = new WeakMap(), _PolyPackBase_packUrls = new WeakMap(), _PolyPackBase_packOverrides = new WeakMap(), _PolyPackBase_openDescription = new WeakMap(), _PolyPackBase_promptUserForNewPack = new WeakMap(), _PolyPackBase_createPackScreen = new WeakMap(), _PolyPackBase_instances = new WeakSet(), _PolyPackBase_getPack = function _PolyPackBase_getPack(id) {
     for (const pack of __classPrivateFieldGet(this, _PolyPackBase_packs, "f")) {
