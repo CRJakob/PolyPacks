@@ -34,16 +34,6 @@ class PolyPackBase extends PolyMod {
     init = (pmlInstance: PolyModLoader) => {
         this.#pml = pmlInstance;
         this.#localStorage = window.localStorage;
-        //this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
-        //    const modButton = document.createElement("button");
-        //    modButton.className = "button button-image";
-        //    modButton.innerHTML = '<img src="images/arrow_left.svg">';
-        //    modButton.addEventListener("click", () => {
-        //        for(let Pack of this.#getAllPacks()){
-        //            this.#createPackScreen;
-        //        }
-        //    });
-        //});
 
         this.#pml.registerFuncMixin("hD", MixinType.INSERT, `vD(this, aD, [], "f");`, () => {
             const e = document.createElement("button");
@@ -66,13 +56,19 @@ class PolyPackBase extends PolyMod {
     /**
      * Register an asset folde to override.
      * 
-     * @param folder - 
+     * @param folder - The folder name in polytrack under which the files are overriden.
      */
     registerFolderOverride(
         folder: string,
         overrideFn: () => void
-    ) { }
-
+    ) {
+        this.#packOverrides.push({
+            folder: folder,
+            overrideFn: overrideFn,
+        });
+        // hmm, ill be a bit more free after sunday so that works ig
+    }
+    // alr lemme push it and test the mod if it imports
     #getPack(id: string): Pack | undefined {
         for (const pack of this.#packs) {
             if (pack.packID === id) return pack;
