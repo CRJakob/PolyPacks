@@ -49,6 +49,9 @@ jobs:
           # Delete all .ts files recursively in main
           find main -type f -name "*.ts" -delete
 
+          # Replace /PolyPacks/dev/ → /PolyPacks/main/ in all .js files
+          find main -type f -name "*.js" -exec sed -i 's|/PolyPacks/dev/|/PolyPacks/main/|g' {} +
+
 
       - name: Commit and push if changes exist
         id: commit
