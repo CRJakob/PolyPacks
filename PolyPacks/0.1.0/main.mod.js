@@ -11,7 +11,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _PolyPacks_pml, _PolyPacks_modList;
 // @ts-ignore
-import { importPolyMod } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/modpackTools.js";
+import { importPolyMod } from "https://pml.orangy.cfd/CRJakob/PolyPacks/main/modpackTools.js";
 // @ts-ignore
 import { PolyMod } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
 class PolyPacks extends PolyMod {
@@ -24,11 +24,11 @@ class PolyPacks extends PolyMod {
             __classPrivateFieldSet(this, _PolyPacks_pml, pmlInstance, "f");
             __classPrivateFieldSet(this, _PolyPacks_modList, [
                 {
-                    url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyPack",
+                    url: "https://pml.orangy.cfd/CRJakob/PolyPacks/main/PolyPack",
                     version: "latest"
                 },
                 {
-                    url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/ImagePack",
+                    url: "https://pml.orangy.cfd/CRJakob/PolyPacks/main/ImagePack",
                     version: "latest"
                 }
             ], "f");
