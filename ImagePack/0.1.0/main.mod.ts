@@ -6,15 +6,43 @@ import { PolyPackBase } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyP
 // import { PolyMod, PolyModLoader } from "../../PolyModLoader/PolyModLoader.ts";
 // import { PolyPackBase } from "../../PolyPack/0.1.0/main.mod.ts";
 
+type texture = {
+    defaultPath: String,
+    customPath: String
+};
+
 class ImagePack extends PolyMod {
     // Mod specific stuff
     #pml: PolyModLoader
     #polypack: PolyPackBase
+    #textures: Array<texture> = [
+        {
+            defaultPath: "images/apply.svg",
+            customPath: ""
+        },
+        {
+            defaultPath:"images/arrow_up.svg",
+            customPath:""
+        },
+        {
+            defaultPath:"images/settings.svg",
+            customPath:"polypack/images/settings.svg"
+        }
+    ]
+
 
     init = (pmlInstance: PolyModLoader) => {
         this.#pml = pmlInstance;
         // @ts-ignore
         this.#polypack = this.#pml.getMod("polypacks");
+        this.#pml.registerFuncMixin("oN", "preloadImage", MixinType.INSERT, "this.addResource();", 
+            // @ts-ignore
+            (applyImageMixins) => {
+                if(this.#textures.find(e)) {
+
+                }
+            }
+        )
     }
 }
 
