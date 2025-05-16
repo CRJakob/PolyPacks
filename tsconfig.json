@@ -8,12 +8,11 @@
     "strict": true
   },
   "include": [
-    "**/*.ts",
-    "*.ts"
+    "PolyPack/*/*.ts",
+    "ImagePack/*/*.ts",
+    "PolyPacks/*/*.ts"
   ],
   "exclude": [
-    "PolyModLoader/**/*",
-    "PolyPack/tempcode/**/*",
-    "node_modules"
+    "PolyModLoader/**/*"
   ]
 }

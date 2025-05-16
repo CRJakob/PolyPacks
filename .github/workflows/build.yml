@@ -25,7 +25,7 @@ jobs:
           node-version: '18'
 
       - name: Install TypeScript
-        run: npm install typescript --no-save
+        run: npm install -g typescript --no-save
 
       - name: Compile all TypeScript files (excluding specified folders)
         run: npx tsc --noEmitOnError false || true
