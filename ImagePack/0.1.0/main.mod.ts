@@ -38,6 +38,7 @@ class ImagePack extends PolyMod {
         this.#pml.registerFuncMixin("oN", "preloadImage", MixinType.INSERT, "this.addResource();", 
             // @ts-ignore
             (applyImageMixins) => {
+                // @ts-ignore
                 if(this.#textures.find(e)) {
 
                 }
