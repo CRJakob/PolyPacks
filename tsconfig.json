@@ -4,6 +4,7 @@
     "module": "ES2020",
     "rootDir": ".",          // base directory
     "outDir": ".",           // output in same structure
+    "noEmitOnError": false,
     "strict": true
   },
   "include": [
