@@ -1,0 +1,17 @@
+{
+    "polymod": {
+        "name": "ImagePack",
+        "id": "imagepack",
+        "author": "CR Jakob, Lockheed SR-71 Blackbird",
+        "targets": [
+            "0.5.0"
+        ],
+        "main": "main.mod.js"
+    },
+    "dependencies": [
+        {
+            "id": "polypacks",
+            "version": "0.1.0"
+        }
+    ]
+}
