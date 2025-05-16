@@ -28,7 +28,7 @@ jobs:
         run: npm install -g typescript --no-save
 
       - name: Compile all TypeScript files (excluding specified folders)
-        run: npx tsc --noEmitOnError false || true
+        run: npx tsc
 
       - name: Commit compiled JS back to dev
         run: |
