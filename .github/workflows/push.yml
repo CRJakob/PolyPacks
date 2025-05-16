@@ -37,10 +37,10 @@ jobs:
           mkdir -p main/PolyPacks
           mkdir -p main/ImagePack
 
-          # Copy new versions from dev
-          cp -r PolyPack/ main/PolyPack/
-          cp -r PolyPacks/ main/PolyPacks/
-          cp -r ImagePack/ main/ImagePack/
+          # Copy contents from dev into main branch folders
+          cp -r PolyPack/* main/PolyPack/
+          cp -r PolyPacks/* main/PolyPacks/
+          cp -r ImagePack/* main/ImagePack/
           cp modpackTools.js main/modpackTools.js
 
           # Remove PolyPack/tempcode if it exists
@@ -48,6 +48,7 @@ jobs:
 
           # Delete all .ts files recursively in main
           find main -type f -name "*.ts" -delete
+
 
       - name: Commit and push if changes exist
         id: commit
@@ -65,16 +66,3 @@ jobs:
             git push origin main
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
-
-      - name: Create GitHub Release
-        if: steps.commit.outputs.changed == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: "release-${{ github.run_number }}"
-          name: "Release ${{ github.run_number }}"
-          body: |
-            Promoted content from `dev` to `main`:
-            - Included: `PolyPack/`, `PolyPacks/`, `ImagePack/`, `modpackTools.js`
-            - Excluded: `PolyPack/tempcode/`, all `*.ts` files
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
