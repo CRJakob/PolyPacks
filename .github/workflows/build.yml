@@ -30,10 +30,6 @@ jobs:
       - name: Compile all TypeScript files (excluding specified folders)
         run: npx tsc --noEmitOnError false || true
 
-
-      - name: Compile modpackTools.ts separately
-        run: npx tsc modpackTools.ts --noEmitOnError false || true
-
       - name: Commit compiled JS back to dev
         run: |
           git config user.name "github-actions[bot]"
