@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # allow pushing and creating releases
+  contents: write  # allows pushing and creating releases
 
 jobs:
   promote:
@@ -16,7 +16,6 @@ jobs:
         with:
           ref: dev
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Checkout main branch into ./main
         uses: actions/checkout@v3
@@ -27,21 +26,28 @@ jobs:
 
       - name: Copy and clean files
         run: |
-          # Clean target files in main
-          rm -f main/latest.json
+          # Remove old versions from main
           rm -rf main/PolyPack
+          rm -rf main/PolyPacks
+          rm -rf main/ImagePack
+          rm -f main/modpackTools.js
 
-          # Recreate PolyPack folder in main
+          # Recreate necessary folders
           mkdir -p main/PolyPack
+          mkdir -p main/PolyPacks
+          mkdir -p main/ImagePack
 
-          # Copy PolyPack/ from dev to main
-          cp -r PolyPack/* main/PolyPack/
+          # Copy new versions from dev
+          cp -r PolyPack/ main/PolyPack/
+          cp -r PolyPacks/ main/PolyPacks/
+          cp -r ImagePack/ main/ImagePack/
+          cp modpackTools.js main/modpackTools.js
 
-          # Remove unwanted subfolder
+          # Remove PolyPack/tempcode if it exists
           rm -rf main/PolyPack/tempcode
 
-          # Remove all PolyPack/*.*.*/main.mod.ts
-          find main/PolyPack -type f -path "*/[0-9]*.[0-9]*.[0-9]*/main.mod.ts" -delete
+          # Delete all .ts files recursively in main
+          find main -type f -name "*.ts" -delete
 
       - name: Commit and push if changes exist
         id: commit
@@ -49,27 +55,26 @@ jobs:
           cd main
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add PolyPack/latest.json PolyPack
+          git add PolyPack PolyPacks ImagePack modpackTools.js
+          
           if git diff --cached --quiet; then
             echo "No changes to commit."
-            echo "::set-output name=changed::false"
+            echo "changed=false" >> $GITHUB_OUTPUT
           else
-            git commit -m "chore: promote PolyPack/latest.json and contents from dev"
+            git commit -m "chore: promote modpack files from dev"
             git push origin main
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Create GitHub Release
         if: steps.commit.outputs.changed == 'true'
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: "release-${{ github.run_number }}"
-          release_name: "Release ${{ github.run_number }}"
+          name: "Release ${{ github.run_number }}"
           body: |
-            Promoted **PolyPack/latest.json** and related contents from `dev` to `main`.
-            - Skipped: `PolyPack/tempcode/`
-            - Skipped: `PolyPack/*.*.*/main.mod.ts`
-          draft: false
-          prerelease: false
+            Promoted content from `dev` to `main`:
+            - Included: `PolyPack/`, `PolyPacks/`, `ImagePack/`, `modpackTools.js`
+            - Excluded: `PolyPack/tempcode/`, all `*.ts` files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
