@@ -10,7 +10,7 @@
     },
     "dependencies": [
         {
-            "id": "polypacks",
+            "id": "polypackbase",
             "version": "0.1.0"
         }
     ]

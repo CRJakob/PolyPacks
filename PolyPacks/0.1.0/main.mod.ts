@@ -4,32 +4,32 @@ import { importPolyMod } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/modp
 import { PolyMod, PolyModLoader } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
 
 type ModEntry = {
-  url: string;
-  version: string;
+    url: string;
+    version: string;
 };
 
 class PolyPacks extends PolyMod {
-  // Mod specific stuff
-  #pml: PolyModLoader;
-  #modList: ModEntry[] = [];
+    // Mod specific stuff
+    #pml: PolyModLoader;
+    #modList: ModEntry[] = [];
 
-  init = (pmlInstance: PolyModLoader) => {
-    this.#pml = pmlInstance;
-    this.#modList = [
-      {
-        url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyPack",
-        version: "latest"
-      },
-      {
-        url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/ImagePack",
-        version: "latest"
-      }
-    ];
+    init = (pmlInstance: PolyModLoader) => {
+        this.#pml = pmlInstance;
+        this.#modList = [
+            {
+                url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyPack",
+                version: "latest"
+            },
+            {
+                url: "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/ImagePack",
+                version: "latest"
+            }
+        ];
 
-    this.#modList.forEach(({ url, version }) => {
-      importPolyMod({ url, version });
-    });
-  };
+        this.#modList.forEach(({ url, version }) => {
+            importPolyMod({ url, version });
+        });
+    };
 }
 
 export const polyMod = new PolyPacks();

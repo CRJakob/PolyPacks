@@ -1,1 +1,19 @@
 audio: line 48549
+
+PolyPacks
+|- PolyPackBase
+|  |- Dependencies init (ImagePack etc.)
+|  |  |- dependency mods call PolyPackBase.registerAssetOverride(...)
+|  |  |- dependency mods have the mixins to handle  the stuff
+|  |  |- dependency mods override fn takes in:
+|  |  |     - polytrack asset url
+|  |  |     - pack asset url
+|  |  |  and gives out url of new asset (it is allowed to change stuff internally as long as it gives a valid url for complicated assets)
+|  |  |  (or maybe we can be a bit flexible and not always return url? (for like block overrides and stuff))
+|  |  |- dependency mod mixin fn takes in asset url and does the mixining stuff to override it in polytrack
+|  |- *After* all dependencies init, PolyPackBase goes thru all registered asset folders and:
+|        - loops through all packs and the files under the registered folder name
+|        - for each file, gives the polytrack url and pack file url to the mod's override fn
+|        - mod gives back a new url, which is now passed to the mod's mixin fn
+|          mixin fn does the mixining stuff to override the url in polytrack
+|- now all polytrack assets have been overriden, game can continue

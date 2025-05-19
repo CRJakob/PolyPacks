@@ -15,6 +15,8 @@ type Pack = {
 
 type PackOverride = {
     folder: string,
+    assets: Array<string>,
+    mixinRegisterFn: () => void,
     overrideFn: () => void,
 };
 
@@ -60,10 +62,14 @@ export class PolyPackBase extends PolyMod {
      */
     registerFolderOverride(
         folder: string,
+        assets: Array<string>,
+        mixinRegisterFn: () => void,
         overrideFn: () => void
     ) {
         this.#packOverrides.push({
             folder: folder,
+            assets: assets,
+            mixinRegisterFn: mixinRegisterFn,
             overrideFn: overrideFn,
         });
     }
