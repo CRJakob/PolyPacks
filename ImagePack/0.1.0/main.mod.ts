@@ -1,10 +1,10 @@
-// // @ts-ignore
-// import { PolyMod, PolyModLoader, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
-// // @ts-ignore
-// import { PolyPackBase } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyPack/0.1.0/main.mod.js";
+// @ts-ignore
+import { PolyMod, PolyModLoader, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+// @ts-ignore
+import { PolyPackBase } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/PolyPack/0.1.0/main.mod.js";
 // IMPORTANT NOTE TO ME: COMMENT OUT BELOW LINES BEFORE PUSHING
-import { PolyMod, PolyModLoader, MixinType } from "../../PolyModLoader/PolyModLoader";
-import { PolyPackBase } from "../../PolyPack/0.1.0/main.mod";
+// import { PolyMod, PolyModLoader, MixinType } from "../../PolyModLoader/PolyModLoader";
+// import { PolyPackBase } from "../../PolyPack/0.1.0/main.mod";
 
 type texture = {
     defaultPath: String,
