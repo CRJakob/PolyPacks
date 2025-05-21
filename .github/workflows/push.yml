@@ -30,7 +30,6 @@ jobs:
           rm -rf main/PolyPack
           rm -rf main/PolyPacks
           rm -rf main/ImagePack
-          rm -f main/modpackTools.js
 
           # Recreate necessary folders
           mkdir -p main/PolyPack
@@ -41,7 +40,6 @@ jobs:
           cp -r PolyPack/* main/PolyPack/
           cp -r PolyPacks/* main/PolyPacks/
           cp -r ImagePack/* main/ImagePack/
-          cp modpackTools.js main/modpackTools.js
 
           # Remove PolyPack/tempcode if it exists
           rm -rf main/PolyPack/tempcode
