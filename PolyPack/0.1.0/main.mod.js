@@ -625,12 +625,22 @@ export class PolyPackBase extends PolyMod {
      * Register an asset folde to override.
      *
      * @param folder - The folder name in polytrack under which the files are overriden.
+     * @param assets - An array of the names of PolyTrack assets under this folder.
+     * @param mixinRegisterFn - The
      */
-    registerFolderOverride(folder, overrideFn) {
+    registerFolderOverride(impl, folder, assets) {
         __classPrivateFieldGet(this, _PolyPackBase_packOverrides, "f").push({
+            impl: impl,
             folder: folder,
-            overrideFn: overrideFn,
+            assets: assets,
         });
+    }
+    applyOverrides() {
+        // TODO
+        // temp for loop to just make stuff work
+        for (const override of __classPrivateFieldGet(this, _PolyPackBase_packOverrides, "f")) {
+            override.impl.finishOverrides();
+        }
     }
 }
 _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _PolyPackBase_polyVersion = new WeakMap(), _PolyPackBase_packs = new WeakMap(), _PolyPackBase_packUrls = new WeakMap(), _PolyPackBase_packOverrides = new WeakMap(), _PolyPackBase_openDescription = new WeakMap(), _PolyPackBase_promptUserForNewPack = new WeakMap(), _PolyPackBase_createPackScreen = new WeakMap(), _PolyPackBase_instances = new WeakSet(), _PolyPackBase_getPack = function _PolyPackBase_getPack(id) {
@@ -731,4 +741,8 @@ _PolyPackBase_pml = new WeakMap(), _PolyPackBase_localStorage = new WeakMap(), _
     __classPrivateFieldGet(this, _PolyPackBase_packs, "f")[currentIndex] = temp;
     __classPrivateFieldGet(this, _PolyPackBase_instances, "m", _PolyPackBase_savePacksToLocalStorage).call(this);
 };
+/**
+ * A handy default override function for PolyPack mods to use if they don't want to bother with an implementation.
+ */
+PolyPackBase.defaultOverride = (_, newURL) => newURL;
 export const polyMod = new PolyPackBase();

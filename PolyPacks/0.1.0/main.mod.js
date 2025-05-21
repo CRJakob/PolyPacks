@@ -33,8 +33,13 @@ class PolyPacks extends PolyMod {
                 }
             ], "f");
             __classPrivateFieldGet(this, _PolyPacks_modList, "f").forEach(({ url, version }) => {
-                importPolyMod({ url, version });
+                importPolyMod(__classPrivateFieldGet(this, _PolyPacks_pml, "f"), { url, version });
             });
+        };
+        this.postInit = () => {
+            console.log(__classPrivateFieldGet(this, _PolyPacks_pml, "f").getMod("polypackbase"));
+            // @ts-ignore
+            __classPrivateFieldGet(this, _PolyPacks_pml, "f").getMod("polypackbase").applyOverrides();
         };
     }
 }
