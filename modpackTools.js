@@ -1,4 +1,4 @@
-import {PolyModLoader} from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+import { PolyModLoader } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
 // function to detect if running on app version
 function isElectron() {
     // Renderer process
@@ -43,13 +43,13 @@ function importPolyMod(pml, { url: modurl, version: modversion }) {
     else {
         // import mod
         pml.addMod({ base: modurl, version: modversion, loaded: true })
-        .then(mod => {
-            window.PolyModLoader.setModLoaded(mod, true);
-            console.info(`✅ Successfully imported: ${modurl}`);
-        })
-        .catch(err => {
-            console.error(`❌ Failed to import ${modurl}: `, err);
-        });
+            .then(mod => {
+                pml.setModLoaded(mod, true);
+                console.info(`✅ Successfully imported: ${modurl}`);
+            })
+            .catch(err => {
+                console.error(`❌ Failed to import ${modurl}: `, err);
+            });
     }
 }
 
