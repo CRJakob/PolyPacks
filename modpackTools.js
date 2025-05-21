@@ -25,7 +25,7 @@ function normalize(u) {
 }
 
 
-function importPolyMod({ url: modurl, version: modversion }) {
+function importPolyMod(pml, { url: modurl, version: modversion }) {
     console.info(`⏳ Attempting to import mod: ${modurl}@${modversion}`);
 
     // get polyMods object
