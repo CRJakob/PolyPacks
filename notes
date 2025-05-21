@@ -4,9 +4,9 @@ PolyPacks
 |- PolyPackBase
 |  |- Dependencies init (ImagePack etc.)
 |  |  |- dependency mods call PolyPackBase.registerAssetOverride(...)
-|  |  |- dependency mods have the mixins to handle  the stuff
+|  |  |- dependency mods have the mixins to handle the stuff
 |  |  |- dependency mods override fn takes in:
-|  |  |     - polytrack asset url
+|  |  |     - old asset url
 |  |  |     - pack asset url
 |  |  |  and gives out url of new asset (it is allowed to change stuff internally as long as it gives a valid url for complicated assets)
 |  |  |  (or maybe we can be a bit flexible and not always return url? (for like block overrides and stuff))

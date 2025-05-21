@@ -2,6 +2,8 @@
 import { importPolyMod } from "https://pml.orangy.cfd/CRJakob/PolyPacks/dev/modpackTools.js";
 // @ts-ignore
 import { PolyMod, PolyModLoader } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
+// IMPORTANT NOTE TO ME: COMMENT OUT BELOW LINE BEFORE PUSHING
+// import { PolyMod, PolyModLoader } from "../../PolyModLoader/PolyModLoader";
 
 type ModEntry = {
     url: string;
@@ -27,9 +29,15 @@ class PolyPacks extends PolyMod {
         ];
 
         this.#modList.forEach(({ url, version }) => {
-            importPolyMod({ url, version });
+            importPolyMod(this.#pml, { url, version });
         });
     };
+
+    postInit = () => {
+        console.log(this.#pml.getMod("polypackbase"));
+        // @ts-ignore
+        this.#pml.getMod("polypackbase").applyOverrides();
+    }
 }
 
 export const polyMod = new PolyPacks();

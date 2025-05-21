@@ -1,7 +1,7 @@
 // @ts-ignore
 import { PolyMod, PolyModLoader, MixinType } from "https://pml.orangy.cfd/PolyTrackMods/PolyModLoader/0.5.0/PolyModLoader.js";
 // IMPORTANT NOTE TO ME: COMMENT OUT BELOW LINE BEFORE PUSHING
-// import { PolyMod, PolyModLoader } from "../PolyModLoader/PolyModLoader";
+// import { PolyMod, PolyModLoader } from "../../PolyModLoader/PolyModLoader";
 
 type Pack = {
     packName: string,
@@ -13,11 +13,17 @@ type Pack = {
     loaded: boolean,
 };
 
+export interface PackOverrideMod {
+    overrideAsset(oldURL: string, newURL: string): string;
+    mixinAsset(oldURL: string, newURL: string): void;
+
+    finishOverrides(): void;
+}
+
 type PackOverride = {
     folder: string,
     assets: Array<string>,
-    mixinRegisterFn: () => void,
-    overrideFn: () => void,
+    impl: PackOverrideMod,
 };
 
 export class PolyPackBase extends PolyMod {
@@ -56,22 +62,35 @@ export class PolyPackBase extends PolyMod {
     }
 
     /**
+     * A handy default override function for PolyPack mods to use if they don't want to bother with an implementation.
+     */
+    static defaultOverride = (_: string, newURL: string) => newURL;
+
+    /**
      * Register an asset folde to override.
      * 
      * @param folder - The folder name in polytrack under which the files are overriden.
+     * @param assets - An array of the names of PolyTrack assets under this folder.
+     * @param mixinRegisterFn - The 
      */
     registerFolderOverride(
+        impl: PackOverrideMod,
         folder: string,
         assets: Array<string>,
-        mixinRegisterFn: () => void,
-        overrideFn: () => void
     ) {
         this.#packOverrides.push({
+            impl: impl,
             folder: folder,
             assets: assets,
-            mixinRegisterFn: mixinRegisterFn,
-            overrideFn: overrideFn,
         });
+    }
+
+    applyOverrides() {
+        // TODO
+        // temp for loop to just make stuff work
+        for (const override of this.#packOverrides) {
+            override.impl.finishOverrides();
+        }
     }
 
     #getPack(id: string): Pack | undefined {
