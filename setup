@@ -1,18 +1,9 @@
 #!/bin/bash
 
-for dir in PolyPacks/*/; do
-    tsc $dir/main.mod.ts --target ES2020 --module ES2020
-done
-for dir in PolyPack/*/; do
-    tsc $dir/main.mod.ts --target ES2020 --module ES2020
-done
-for dir in ImagePack/*/; do
-    tsc $dir/main.mod.ts --target ES2020 --module ES2020
-done
-
+npx tsc
 if [[ "$1" == "host" ]]; then
     trap "trap - TERM && kill -- -$$" INT TERM EXIT
     (cd PolyModLoader; python ../httpserver.py 8000 &> /dev/null) &
-    (cd PolyPacks; python ../httpserver.py 8001 &> /dev/null) &
+    python httpserver.py 8001 &> /dev/null &
     wait
 fi
