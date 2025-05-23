@@ -1,7 +1,7 @@
 {
     "polymod": {
-        "name": "PolyPacks",
-        "id": "polypacks",
+        "name": "PolyPack",
+        "id": "polypackbase",
         "author": "CR Jakob, Lockheed SR-71 Blackbird",
         "targets": [
             "0.5.0"
